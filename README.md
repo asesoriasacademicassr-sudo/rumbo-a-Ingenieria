@@ -1,17 +1,19 @@
-# Rumbo a Ingeniería — Versión 0.4
+# Rumbo a Ingeniería v0.7 — Proyecto Orión
+
+Sitio web estático preparado para GitHub Pages.
 
 ## Novedades
-- Calculadora de promedio funcional.
-- Diagnóstico Rápido de demostración con diez preguntas.
-- Resultado general y recomendación de área por reforzar.
-- Comparación clara entre Diagnóstico Rápido y EIA.
-- Mensaje de la EIA orientado a una mejor experiencia de aprendizaje.
-- Diseño adaptable a celular y computadora.
+- Logotipo oficial y favicon integrados.
+- Rediseño visual completo y adaptable a celular.
+- Pantalla de bienvenida y fondo espacial animado.
+- Orientación Inicial 2.0 con 10 preguntas, progreso y reporte por materia.
+- Biblioteca con buscador y filtros.
+- Asistente virtual Atenea (preguntas frecuentes).
+- Video de bienvenida preparado.
+- Caso de éxito demostrativo.
+- Valores, estadísticas, línea del tiempo y Visión 2035.
+- Formulario de WhatsApp ordenado al número 871 325 1593.
+- Modo claro/oscuro y botón para volver arriba.
 
-## Importante
-El Diagnóstico Rápido incluido en esta versión es una demostración inicial. En versiones posteriores se ampliará por grado y materia.
-
-## Cómo abrir
-Descomprime el archivo y abre `index.html`.
-
-Versión 0.6: orientación inicial ampliada a 10 preguntas, diseño más compacto, formato ordenado para mensajes de WhatsApp y nuevo número de contacto 871 325 1593.
+## Publicación
+Sube `index.html`, `styles.css`, `app.js` y la carpeta `assets` a la raíz del repositorio de GitHub Pages.

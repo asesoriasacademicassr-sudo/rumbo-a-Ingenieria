@@ -2,34 +2,25 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Rumbo a Ingeniería: asesorías personalizadas de Matemáticas, Física e Inglés para primaria y secundaria. Primera clase gratis.">
-  <title>Rumbo a Ingeniería</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Rumbo a Ingeniería: asesorías personalizadas de Matemáticas, Física e Inglés para primaria y secundaria.">
+  <meta name="theme-color" content="#0B1F3A">
+  <title>Rumbo a Ingeniería | Proyecto Orión v0.7</title>
+  <link rel="icon" href="assets/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div id="splash" class="splash" aria-hidden="true"><img src="assets/favicon.png" alt=""><p>Rumbo a Ingeniería</p><span>Proyecto Orión</span></div>
   <canvas id="stars" aria-hidden="true"></canvas>
-
   <header class="site-header">
-    <a class="brand" href="#inicio" aria-label="Rumbo a Ingeniería, inicio">
-      <img src="assets/logo.png" alt="Logo de Rumbo a Ingeniería">
-      <span>Rumbo a Ingeniería</span>
-    </a>
-
+    <a class="brand" href="#inicio"><img src="assets/favicon.png" alt="Logo"><span><b>Rumbo a</b> Ingeniería</span></a>
     <button class="menu-button" aria-expanded="false" aria-controls="main-nav">☰</button>
-
     <nav id="main-nav" class="nav">
-      <a href="#nosotros">Nosotros</a>
-      <a href="#metodo">Método RAI</a>
-      <a href="#materias">Materias</a>
-      <a href="#modalidades">Modalidades</a>
-      <a href="#herramientas">Herramientas</a>
-      <a href="#precios">Precios</a>
-      <a href="#faq">Preguntas</a>
-      <a class="nav-cta" href="#contacto">Primera clase gratis</a>
+      <a href="#inicio">Inicio</a><a href="#materias">Materias</a><a href="#orientacion">Orientación</a><a href="#recursos">Recursos</a><a href="#valores">Valores</a><a href="#contacto">Contacto</a>
+      <button id="theme-toggle" class="icon-button" aria-label="Cambiar tema">☀</button>
     </nav>
   </header>
 
@@ -37,611 +28,79 @@
     <section id="inicio" class="hero section">
       <div class="hero-copy reveal">
         <p class="eyebrow">Matemáticas · Física · Inglés</p>
-        <h1>Aprender con confianza.<br><span>Crecer con propósito.</span></h1>
-        <p class="lead">Asesorías personalizadas para estudiantes de primaria y secundaria, con explicaciones paso a paso y seguimiento real del aprendizaje.</p>
-        <div class="hero-actions">
-          <a class="button primary" href="https://wa.me/528713251593?text=Hola%2C%20quiero%20agendar%20mi%20primera%20clase%20gratis." target="_blank" rel="noopener">Agendar primera clase gratis</a>
-          <a class="button secondary" href="#metodo">Conocer el Método RAI</a>
-        </div>
-        <p class="microcopy">Primera clase completamente gratuita y sin compromiso.</p>
+        <h1>Tu camino al conocimiento <span>empieza hoy.</span></h1>
+        <p class="lead">Asesorías personalizadas para estudiantes de primaria y secundaria. Aprendemos a tu ritmo, medimos tu progreso y construimos confianza.</p>
+        <div class="hero-actions"><a class="button primary" href="#orientacion">Realizar orientación inicial</a><a class="button secondary" href="#contacto">Solicitar información</a></div>
+        <div class="trust-strip"><span>✓ Primera clase gratis</span><span>✓ Atención personalizada</span><span>✓ Seguimiento real</span></div>
       </div>
-
-      <div class="hero-panel reveal">
-        <img src="assets/logo.png" alt="Emblema de Rumbo a Ingeniería">
-        <p>“El futuro comienza con el aprendizaje de hoy.”</p>
-      </div>
+      <div class="hero-visual reveal"><div class="logo-glow"></div><img src="assets/logo-oficial.png" alt="Logotipo oficial de Rumbo a Ingeniería"></div>
     </section>
 
-    <section id="nosotros" class="section two-column">
-      <div class="reveal">
-        <p class="eyebrow">Nuestra razón de ser</p>
-        <h2>¿Por qué nació Rumbo a Ingeniería?</h2>
-        <p>Rumbo a Ingeniería nació con la convicción de que cada estudiante puede alcanzar grandes metas cuando recibe una enseñanza basada en la paciencia, el respeto y la confianza.</p>
-        <p>Aprender no debe ser motivo de frustración, sino una oportunidad para crecer, descubrir capacidades y construir un mejor futuro.</p>
-      </div>
-      <aside class="quote-card reveal">
-        <p>“No medimos nuestro éxito por el número de alumnos, sino por el número de estudiantes que descubren que son capaces de alcanzar metas que antes parecían imposibles.”</p>
-      </aside>
-    </section>
-
-    <section class="section">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Nuestro compromiso</p>
-        <h2>Una enseñanza seria, cercana y personalizada</h2>
-      </div>
-      <div class="cards four">
-        <article class="card reveal"><span>01</span><h3>Paciencia</h3><p>Explicamos sin prisas y resolvemos dudas con respeto.</p></article>
-        <article class="card reveal"><span>02</span><h3>Comprensión</h3><p>No avanzamos hasta que el alumno entienda el tema.</p></article>
-        <article class="card reveal"><span>03</span><h3>Seguimiento</h3><p>Registramos objetivos, avances y áreas por reforzar.</p></article>
-        <article class="card reveal"><span>04</span><h3>Mejora continua</h3><p>Revisamos constantemente cómo enseñar mejor.</p></article>
-      </div>
-    </section>
-
-    <section id="metodo" class="section">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Nuestra metodología</p>
-        <h2>Método RAI</h2>
-        <p>Primero comprendemos al estudiante. Después le enseñamos.</p>
-      </div>
-      <div class="rai-grid">
-        <article class="rai-step reveal"><strong>R</strong><h3>Reconocer</h3><p>Conocemos el nivel, las fortalezas y las áreas de mejora.</p></article>
-        <article class="rai-step reveal"><strong>A</strong><h3>Adaptar</h3><p>Diseñamos una ruta de aprendizaje acorde con su ritmo y forma de aprender.</p></article>
-        <article class="rai-step reveal"><strong>I</strong><h3>Impulsar</h3><p>Acompañamos al alumno para que avance con conocimientos y confianza.</p></article>
-      </div>
+    <section class="stats section compact reveal" aria-label="Estadísticas del proyecto">
+      <article><strong data-count="0">0</strong><span>Estudiantes</span></article><article><strong data-count="0">0</strong><span>Horas impartidas</span></article><article><strong data-count="6">0</strong><span>Recursos preparados</span></article><article><strong data-count="100">0</strong><span>Meta de estudiantes</span></article>
     </section>
 
     <section id="materias" class="section">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Materias</p>
-        <h2>Bases sólidas para avanzar</h2>
-      </div>
+      <div class="section-heading reveal"><p class="eyebrow">Nuestras asesorías</p><h2>Bases sólidas para llegar más lejos</h2></div>
       <div class="cards three">
-        <article class="subject-card reveal">
-          <div class="subject-icon">∑</div>
-          <h3>Matemáticas</h3>
-          <p>Operaciones, fracciones, porcentajes, geometría, álgebra y preparación para exámenes.</p>
-          <span>Primaria y secundaria</span>
-        </article>
-        <article class="subject-card reveal">
-          <div class="subject-icon">⚛</div>
-          <h3>Física</h3>
-          <p>Movimiento, fuerza, energía, leyes de Newton y resolución de problemas paso a paso.</p>
-          <span>Secundaria</span>
-        </article>
-        <article class="subject-card reveal">
-          <div class="subject-icon">EN</div>
-          <h3>Inglés</h3>
-          <p>Gramática, vocabulario, pronunciación, comprensión y práctica escolar.</p>
-          <span>Primaria y secundaria</span>
-        </article>
+        <article class="subject-card reveal"><div class="subject-icon">∑</div><h3>Matemáticas</h3><p>Operaciones, fracciones, álgebra, geometría y preparación para exámenes.</p><span>Primaria y secundaria</span></article>
+        <article class="subject-card reveal"><div class="subject-icon">⚛</div><h3>Física</h3><p>Movimiento, fuerza, energía y resolución de problemas paso a paso.</p><span>Secundaria</span></article>
+        <article class="subject-card reveal"><div class="subject-icon">EN</div><h3>Inglés</h3><p>Vocabulario, gramática, pronunciación y comprensión escolar.</p><span>Primaria y secundaria</span></article>
       </div>
     </section>
 
-    <section id="eia" class="section feature-section">
-      <div class="reveal">
-        <p class="eyebrow">Evaluación Integral de Aprendizaje</p>
-        <h2>EIA: conocer para enseñar mejor</h2>
-        <p>La EIA analiza el nivel académico, la forma de aprendizaje, los hábitos de estudio y los objetivos del alumno para crear una ruta personalizada.</p>
-        <p class="highlight">La EIA no busca medir cuánto sabes, sino comprender cómo aprendes para ayudarte a alcanzar tu máximo potencial.</p>
-      </div>
-      <div class="checklist reveal">
-        <div>✓ Fortalezas académicas</div>
-        <div>✓ Áreas por reforzar</div>
-        <div>✓ Perfil de aprendizaje</div>
-        <div>✓ Recomendaciones</div>
-        <div>✓ Ruta personalizada</div>
-      </div>
+    <section class="section split-section">
+      <div class="video-card reveal"><div class="video-placeholder"><img src="assets/favicon.png" alt=""><button aria-label="Próximamente: reproducir video">▶</button></div><div><p class="eyebrow">Video de bienvenida</p><h3>Conoce nuestra misión</h3><p>Este espacio queda preparado para tu video de presentación.</p></div></div>
+      <div class="success-card reveal"><p class="eyebrow">Caso de éxito demostrativo</p><h3>De la duda a la confianza</h3><div class="before-after"><span>Inicio: Bajo</span><span>Final: Alto</span></div><blockquote>“Ahora entiendo cómo resolver los ejercicios y ya no me da miedo equivocarme.”</blockquote><small>Ejemplo visual. Se sustituirá por testimonios reales con autorización.</small></div>
     </section>
 
-    
-    <section id="modalidades" class="section">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Modalidades de clase</p>
-        <h2>El tiempo adecuado para cada estudiante</h2>
-        <p>No recomendamos la opción más larga o más costosa; recomendamos la modalidad que mejor ayude al estudiante a aprender.</p>
-      </div>
-
-      <div class="modalities-grid">
-        <article class="modality-card reveal">
-          <div class="modality-top">
-            <span class="modality-dot standard"></span>
-            <p class="level">Clase Estándar</p>
-          </div>
-          <h3>1 hora</h3>
-          <p>Ideal para apoyo puntual, repaso, resolución de dudas y estudiantes con periodos de concentración más cortos.</p>
-          <ul>
-            <li>Primaria baja</li>
-            <li>Temas específicos</li>
-            <li>Repaso antes de exámenes</li>
-            <li>Apoyo con tareas y dudas</li>
-          </ul>
-        </article>
-
-        <article class="modality-card featured reveal">
-          <div class="modality-top">
-            <span class="modality-dot deep"></span>
-            <p class="level">Clase Profunda</p>
-          </div>
-          <h3>1 hora 30 minutos</h3>
-          <p>Recomendada para temas complejos, recuperación académica, preparación para exámenes y mayor práctica.</p>
-          <ul>
-            <li>Secundaria</li>
-            <li>Temas de mayor dificultad</li>
-            <li>Más ejercicios guiados</li>
-            <li>Seguimiento y retroalimentación</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section class="section recommendation-section">
-      <div class="reveal">
-        <p class="eyebrow">Recomendación personalizada</p>
-        <h2>¿Qué tipo de clase necesita mi hijo?</h2>
-        <p>Después de la primera clase gratuita y, si se desea, de la EIA, recomendaremos la modalidad que mejor se adapte a la edad, nivel académico, capacidad de concentración y objetivos del estudiante.</p>
-      </div>
-
-      <div class="iaa-card reveal">
-        <p class="eyebrow">Índice de Atención Académica</p>
-        <h3>IAA</h3>
-        <p>Indicador interno que orienta la recomendación de clase.</p>
-        <div class="iaa-level"><span class="pill low">Bajo</span><span>Clase Estándar</span></div>
-        <div class="iaa-level"><span class="pill medium">Medio</span><span>Cualquiera de las dos</span></div>
-        <div class="iaa-level"><span class="pill high">Alto</span><span>Clase Profunda</span></div>
-        <small>El IAA no etiqueta al alumno; solo ayuda a elegir una duración adecuada.</small>
-      </div>
-    </section>
-
-    <section id="portal" class="section portal-preview">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Vista previa de plataforma</p>
-        <h2>Perfil del estudiante</h2>
-        <p>Una visión clara del progreso, las metas y los logros de cada alumno.</p>
-      </div>
-
-      <div class="student-dashboard reveal">
-        <div class="student-head">
-          <div>
-            <p class="eyebrow">Alumno de demostración</p>
-            <h3>Juan Pérez</h3>
-            <span>Secundaria · Matemáticas y Física</span>
-          </div>
-          <div class="progress-ring" aria-label="Progreso general 82 por ciento">
-            <strong>82%</strong>
-            <span>Progreso</span>
-          </div>
-        </div>
-
-        <div class="student-grid">
-          <article class="mini-panel">
-            <p class="mini-label">Próxima clase</p>
-            <h4>Martes · 5:00 p. m.</h4>
-            <span>Matemáticas</span>
-          </article>
-          <article class="mini-panel">
-            <p class="mini-label">Meta SMART</p>
-            <h4>Subir de 70 a 85</h4>
-            <span>Antes de terminar el semestre</span>
-          </article>
-          <article class="mini-panel">
-            <p class="mini-label">Racha de estudio</p>
-            <h4>7 días</h4>
-            <span>Constancia activa</span>
-          </article>
-        </div>
-
-        <div class="subject-progress">
-          <div><span>Matemáticas</span><div class="bar"><i style="width:80%"></i></div><strong>80%</strong></div>
-          <div><span>Física</span><div class="bar"><i style="width:64%"></i></div><strong>64%</strong></div>
-          <div><span>Inglés</span><div class="bar"><i style="width:90%"></i></div><strong>90%</strong></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section experience-grid">
-      <article class="experience-card reveal">
-        <p class="eyebrow">Mi Trayectoria</p>
-        <h2>Proyecto Constelaciones</h2>
-        <p>Una experiencia opcional y discreta donde cada logro agrega una estrella al recorrido del estudiante.</p>
-        <div class="constellation" aria-label="Cinco logros de ejemplo">
-          <span>★</span><span>★</span><span>★</span><span>☆</span><span>☆</span>
-        </div>
-        <ul>
-          <li>Primera clase completada</li>
-          <li>Cinco clases completadas</li>
-          <li>Primera meta alcanzada</li>
-        </ul>
-      </article>
-
-      <article class="experience-card reveal">
-        <p class="eyebrow">Cápsula del Tiempo</p>
-        <h2>Un mensaje para el futuro</h2>
-        <blockquote>“Quiero obtener más de 90 en matemáticas y sentirme más seguro al resolver problemas.”</blockquote>
-        <div class="capsule-date">Se abrirá el 15 de diciembre de 2026</div>
-      </article>
-
-      <article class="experience-card reveal">
-        <p class="eyebrow">Biblioteca de Logros</p>
-        <h2>El esfuerzo también se conserva</h2>
-        <div class="achievement-list">
-          <span>🥉 Explorador</span>
-          <span>📘 Primer módulo completado</span>
-          <span>🎯 Meta académica alcanzada</span>
-        </div>
-      </article>
-    </section>
-
-
-    
-    
-    <section id="herramientas" class="section">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Herramientas gratuitas</p>
-        <h2>Conoce tu avance y da el siguiente paso</h2>
-        <p>Estas herramientas ofrecen una primera orientación. No sustituyen la EIA ni una evaluación personalizada.</p>
-      </div>
-
-      <div class="tools-grid">
-        <article class="tool-card reveal">
-          <div class="tool-heading">
-            <span class="tool-icon">%</span>
-            <div>
-              <p class="eyebrow">Calculadora de promedio</p>
-              <h3>Calcula tus resultados</h3>
-            </div>
-          </div>
-
-          <p>Escribe tus calificaciones separadas por comas.</p>
-          <label>
-            <span>Calificaciones</span>
-            <input id="grade-input" placeholder="Ej. 85, 90, 78, 100">
-          </label>
-          <button id="grade-button" class="button secondary" type="button">Calcular promedio</button>
-
-          <div id="grade-result" class="tool-result" aria-live="polite">
-            <span>Tu resultado aparecerá aquí.</span>
-          </div>
-        </article>
-
-        <article class="tool-card reveal">
-          <div class="tool-heading">
-            <span class="tool-icon">DR</span>
-            <div>
-              <p class="eyebrow">Diagnóstico rápido</p>
-              <h3>Orientación inicial</h3>
-            </div>
-          </div>
-
-          <p>Responde diez preguntas breves para identificar qué área conviene reforzar primero.</p>
-
-          <form id="quick-diagnostic" class="diagnostic-form">
-            <fieldset>
-              <legend>1. ¿Cuánto es 3/4 + 1/4?</legend>
-              <label><input type="radio" name="q1" value="0"> 4/8</label>
-              <label><input type="radio" name="q1" value="1"> 1</label>
-              <label><input type="radio" name="q1" value="0"> 3/8</label>
-            </fieldset>
-
-            <fieldset>
-              <legend>2. Si 2x = 14, ¿cuánto vale x?</legend>
-              <label><input type="radio" name="q2" value="1"> 7</label>
-              <label><input type="radio" name="q2" value="0"> 12</label>
-              <label><input type="radio" name="q2" value="0"> 28</label>
-            </fieldset>
-
-            <fieldset>
-              <legend>3. ¿Cuál es el área de un rectángulo de 5 × 3?</legend>
-              <label><input type="radio" name="q3" value="0"> 8</label>
-              <label><input type="radio" name="q3" value="1"> 15</label>
-              <label><input type="radio" name="q3" value="0"> 16</label>
-            </fieldset>
-
-            <fieldset>
-              <legend>4. ¿Cuánto es 25% de 80?</legend>
-              <label><input type="radio" name="q4" value="0"> 15</label>
-              <label><input type="radio" name="q4" value="1"> 20</label>
-              <label><input type="radio" name="q4" value="0"> 25</label>
-            </fieldset>
-
-            <fieldset>
-              <legend>5. ¿Qué fuerza atrae los objetos hacia la Tierra?</legend>
-              <label><input type="radio" name="q5" value="1"> Gravedad</label>
-              <label><input type="radio" name="q5" value="0"> Fricción</label>
-              <label><input type="radio" name="q5" value="0"> Magnetismo</label>
-            </fieldset>
-
-            <fieldset>
-              <legend>6. La energía de un objeto en movimiento es...</legend>
-              <label><input type="radio" name="q6" value="0"> Potencial</label>
-              <label><input type="radio" name="q6" value="1"> Cinética</label>
-              <label><input type="radio" name="q6" value="0"> Química</label>
-            </fieldset>
-
-            <fieldset>
-              <legend>7. La rapidez indica...</legend>
-              <label><input type="radio" name="q7" value="1"> Distancia recorrida por unidad de tiempo</label>
-              <label><input type="radio" name="q7" value="0"> Cantidad de materia</label>
-              <label><input type="radio" name="q7" value="0"> Temperatura de un cuerpo</label>
-            </fieldset>
-
-            <fieldset>
-              <legend>8. Completa: She ___ a student.</legend>
-              <label><input type="radio" name="q8" value="0"> are</label>
-              <label><input type="radio" name="q8" value="1"> is</label>
-              <label><input type="radio" name="q8" value="0"> am</label>
-            </fieldset>
-
-            <fieldset>
-              <legend>9. ¿Qué significa “book”?</legend>
-              <label><input type="radio" name="q9" value="1"> Libro</label>
-              <label><input type="radio" name="q9" value="0"> Mesa</label>
-              <label><input type="radio" name="q9" value="0"> Escuela</label>
-            </fieldset>
-
-            <fieldset>
-              <legend>10. Completa: They ___ soccer every Saturday.</legend>
-              <label><input type="radio" name="q10" value="0"> plays</label>
-              <label><input type="radio" name="q10" value="1"> play</label>
-              <label><input type="radio" name="q10" value="0"> playing</label>
-            </fieldset>
-
-            <button class="button primary" type="submit">Ver orientación</button>
+    <section id="orientacion" class="section diagnostic-section">
+      <div class="section-heading reveal"><p class="eyebrow">Orientación Inicial 2.0</p><h2>Descubre tu punto de partida</h2><p>Diez preguntas, una por pantalla, con resultados separados por materia.</p></div>
+      <div class="diagnostic-shell reveal">
+        <div class="diagnostic-main">
+          <div class="diagnostic-top"><span id="question-counter">Pregunta 1 de 10</span><span>Tiempo estimado: 4 min</span></div>
+          <div class="progress"><i id="progress-bar"></i></div>
+          <form id="diagnostic-form">
+            <div id="question-stage"></div>
+            <div class="diagnostic-actions"><button type="button" id="prev-question" class="button secondary" disabled>Anterior</button><button type="button" id="next-question" class="button primary">Siguiente</button></div>
           </form>
-
-          <div id="diagnostic-result" class="tool-result" aria-live="polite">
-            <span>Completa las preguntas para ver tu orientación.</span>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section eia-comparison">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Dos niveles de evaluación</p>
-        <h2>Diagnóstico Rápido y EIA</h2>
-      </div>
-
-      <div class="comparison-grid">
-        <article class="comparison-card reveal">
-          <p class="level">Diagnóstico Rápido</p>
-          <h3>Una primera orientación</h3>
-          <ul>
-            <li>Duración aproximada de 5 a 10 minutos</li>
-            <li>Preguntas breves de Matemáticas, Física e Inglés</li>
-            <li>Resultado general y área sugerida para reforzar</li>
-            <li>Disponible gratuitamente en la página</li>
-          </ul>
-        </article>
-
-        <article class="comparison-card featured reveal">
-          <p class="level">EIA</p>
-          <h3>Evaluación Integral de Aprendizaje</h3>
-          <ul>
-            <li>Evaluación más profunda y precisa</li>
-            <li>Nivel académico, hábitos y perfil de aprendizaje</li>
-            <li>Fortalezas, áreas de mejora y recomendaciones</li>
-            <li>Base para crear una Ruta de Aprendizaje Personalizada</li>
-          </ul>
-          <p class="highlight">Para una mejor experiencia de aprendizaje, primero buscamos comprender al estudiante.</p>
-        </article>
-      </div>
-    </section>
-
-
-    <section id="precios" class="section">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Precios</p>
-        <h2>Opciones claras y accesibles</h2>
-        <p>La primera clase es gratuita. Después, recomendamos la modalidad que mejor se adapte al estudiante.</p>
-      </div>
-
-      <div class="pricing-levels">
-        <article class="pricing-level-card reveal">
-          <div class="pricing-level-head">
-            <div>
-              <p class="level">Primaria</p>
-              <h3>Clases personalizadas</h3>
-            </div>
-            <span class="pricing-tag">Primera clase gratis</span>
-          </div>
-
-          <div class="pricing-options">
-            <div class="pricing-option">
-              <span class="pricing-option-label">Clase Estándar</span>
-              <strong>$80 MXN</strong>
-              <small>1 hora</small>
-            </div>
-            <div class="pricing-option">
-              <span class="pricing-option-label">Clase Profunda</span>
-              <strong>$100 MXN</strong>
-              <small>1 hora 30 minutos</small>
-            </div>
-          </div>
-
-          <div class="package-box">
-            <div>
-              <span>Paquete de 4 clases Estándar</span>
-              <strong>$280 MXN</strong>
-            </div>
-            <div>
-              <span>Paquete de 4 clases Profundas</span>
-              <strong>$350 MXN</strong>
-            </div>
-          </div>
-        </article>
-
-        <article class="pricing-level-card featured reveal">
-          <div class="pricing-level-head">
-            <div>
-              <p class="level">Secundaria</p>
-              <h3>Mayor profundidad y seguimiento</h3>
-            </div>
-            <span class="pricing-tag">Primera clase gratis</span>
-          </div>
-
-          <div class="pricing-options">
-            <div class="pricing-option">
-              <span class="pricing-option-label">Clase Estándar</span>
-              <strong>$120 MXN</strong>
-              <small>1 hora</small>
-            </div>
-            <div class="pricing-option">
-              <span class="pricing-option-label">Clase Profunda</span>
-              <strong>$150 MXN</strong>
-              <small>1 hora 30 minutos</small>
-            </div>
-          </div>
-
-          <div class="package-box">
-            <div>
-              <span>Paquete de 4 clases Estándar</span>
-              <strong>$420 MXN</strong>
-            </div>
-            <div>
-              <span>Paquete de 4 clases Profundas</span>
-              <strong>$550 MXN</strong>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section schedule-section">
-      <div class="reveal">
-        <p class="eyebrow">Horarios</p>
-        <h2>Disponibilidad semanal</h2>
-      </div>
-      <div class="schedule reveal">
-        <div><strong>Lunes a sábado</strong><span>5:00 p. m. – 9:00 p. m.</span></div>
-        <div><strong>Domingo</strong><span>2:00 p. m. – 8:00 p. m.</span></div>
-      </div>
-    </section>
-
-    <section class="section future-grid">
-      <article class="future-card reveal">
-        <p class="eyebrow">Próximamente</p>
-        <h2>Perfil del estudiante</h2>
-        <p>Cada alumno podrá consultar su progreso, próximas clases, evaluaciones, recursos y logros de Misión Rumbo.</p>
-      </article>
-      <article class="future-card reveal">
-        <p class="eyebrow">Gestión institucional</p>
-        <h2>Dashboard del fundador</h2>
-        <p>Una herramienta futura para administrar alumnos, profesores, horarios, pagos, certificados y crecimiento.</p>
-      </article>
-    </section>
-
-    <section id="faq" class="section">
-      <div class="section-heading reveal">
-        <p class="eyebrow">Preguntas frecuentes</p>
-        <h2>Información clara antes de comenzar</h2>
-      </div>
-      <div class="faq-list reveal">
-        <details><summary>¿La primera clase es realmente gratis?</summary><p>Sí. La primera clase no tiene costo y permite conocer nuestra forma de trabajo antes de tomar una decisión.</p></details>
-        <details><summary>¿Qué es el Método RAI?</summary><p>Es nuestra metodología: Reconocer el nivel del alumno, Adaptar la enseñanza e Impulsar su crecimiento.</p></details>
-        <details><summary>¿Qué es la EIA?</summary><p>Es la Evaluación Integral de Aprendizaje, diseñada para conocer el nivel, la forma de aprender y las necesidades del estudiante.</p></details>
-        <details><summary>¿Las clases son individuales?</summary><p>Sí. Esto permite adaptar el ritmo y los ejemplos a cada alumno.</p></details>
-        <details><summary>¿Las clases pueden ser en línea?</summary><p>Sí. Las asesorías pueden realizarse de forma virtual.</p></details>
-        <details><summary>¿Qué diferencia hay entre la Clase Estándar y la Clase Profunda?</summary><p>La Clase Estándar dura una hora y está pensada para apoyo puntual o estudiantes con menor tiempo de concentración. La Clase Profunda dura una hora y media y permite trabajar temas complejos con más práctica y seguimiento.</p></details>
-        <details><summary>¿Cómo recomiendan la modalidad adecuada?</summary><p>Consideramos la edad, el nivel académico, la capacidad de concentración, los objetivos y, cuando se realiza, los resultados de la EIA y del Índice de Atención Académica.</p></details>
-        <details><summary>¿Puedo tomar solo una materia?</summary><p>Sí. El alumno puede concentrarse únicamente en la materia que necesita reforzar.</p></details>
-      </div>
-    </section>
-
-    
-    <section class="section"><div class="section-heading"><p class="eyebrow">¿Por qué elegir Rumbo a Ingeniería?</p><h2>Más que asesorías, un acompañamiento académico.</h2></div><div class="trust-grid"><div class="trust-card"><h3>🎯 Enseñanza personalizada</h3><p>Clases adaptadas a cada estudiante.</p></div><div class="trust-card"><h3>📈 Seguimiento</h3><p>Metas SMART, IAA y progreso.</p></div><div class="trust-card"><h3>🧠 Comprender antes que memorizar</h3></div><div class="trust-card"><h3>🚀 Inspirar grandes metas</h3></div></div><blockquote class='promise'>Prometemos escuchar antes de enseñar, comprender antes de evaluar y acompañar antes de exigir.</blockquote></section><section id="contacto" class="section contact-section">
-      <div class="contact-info reveal">
-        <p class="eyebrow">Contacto</p>
-        <h2>¿Listo para comenzar?</h2>
-        <p>A veces, el primer paso hacia una gran meta es simplemente pedir ayuda.</p>
-
-        <div class="contact-cards">
-          <a class="contact-card" href="https://wa.me/528713251593" target="_blank" rel="noopener">
-            <span class="contact-card-icon">WA</span>
-            <span>
-              <small>WhatsApp</small>
-              <strong>871 325 1593</strong>
-            </span>
-          </a>
-
-          <a class="contact-card" href="mailto:asesorias.academicas.sr@gmail.com">
-            <span class="contact-card-icon">@</span>
-            <span>
-              <small>Correo</small>
-              <strong>asesorias.academicas.sr@gmail.com</strong>
-            </span>
-          </a>
-
-          <a class="contact-card" href="https://instagram.com/rumbo.a.ingenieria" target="_blank" rel="noopener">
-            <span class="contact-card-icon">IG</span>
-            <span>
-              <small>Instagram</small>
-              <strong>@rumbo.a.ingenieria</strong>
-            </span>
-          </a>
+          <div id="diagnostic-report" class="diagnostic-report" hidden></div>
         </div>
+        <aside class="diagnostic-side"><div class="progress-ring" id="progress-ring"><strong>10%</strong><span>Tu progreso</span></div><div class="tip"><b>Consejo</b><p>Tómate tu tiempo. Esta orientación no es un examen oficial.</p></div></aside>
       </div>
+    </section>
 
-      <form id="contact-form" class="contact-form reveal">
-        <div class="form-heading">
-          <p class="eyebrow">Solicita información</p>
-          <h3>Cuéntanos qué necesita el estudiante</h3>
-        </div>
+    <section id="recursos" class="section">
+      <div class="section-heading reveal"><p class="eyebrow">Biblioteca gratuita</p><h2>Recursos para practicar</h2></div>
+      <div class="resource-tools reveal"><input id="resource-search" type="search" placeholder="Buscar recursos..."><div class="resource-filters"><button class="filter active" data-filter="all">Todos</button><button class="filter" data-filter="matematicas">Matemáticas</button><button class="filter" data-filter="fisica">Física</button><button class="filter" data-filter="ingles">Inglés</button></div></div>
+      <div id="resource-grid" class="resource-grid">
+        <article class="resource-card reveal" data-category="matematicas"><span>PDF</span><h3>Guía de álgebra básica</h3><p>Ecuaciones, productos notables y ejercicios.</p><button disabled>Próximamente</button></article>
+        <article class="resource-card reveal" data-category="matematicas"><span>PDF</span><h3>Ejercicios de fracciones</h3><p>Práctica gradual con respuestas.</p><button disabled>Próximamente</button></article>
+        <article class="resource-card reveal" data-category="fisica"><span>PDF</span><h3>Formulario de Física</h3><p>Movimiento, fuerza y energía.</p><button disabled>Próximamente</button></article>
+        <article class="resource-card reveal" data-category="fisica"><span>Guía</span><h3>Leyes de Newton</h3><p>Explicaciones y ejemplos sencillos.</p><button disabled>Próximamente</button></article>
+        <article class="resource-card reveal" data-category="ingles"><span>PDF</span><h3>Vocabulario esencial</h3><p>Palabras útiles para la escuela.</p><button disabled>Próximamente</button></article>
+        <article class="resource-card reveal" data-category="ingles"><span>Guía</span><h3>Present Simple</h3><p>Uso, estructura y ejercicios.</p><button disabled>Próximamente</button></article>
+      </div>
+    </section>
 
-        <div class="form-grid">
-          <label>
-            <span>Nombre</span>
-            <input name="nombre" required placeholder="Nombre del alumno o padre de familia">
-          </label>
+    <section id="valores" class="section">
+      <div class="section-heading reveal"><p class="eyebrow">Nuestra identidad</p><h2>Valores que guían cada clase</h2></div>
+      <div class="values-grid"><article class="reveal">📖<h3>Aprendizaje</h3></article><article class="reveal">🤝<h3>Respeto</h3></article><article class="reveal">💡<h3>Curiosidad</h3></article><article class="reveal">🎯<h3>Disciplina</h3></article><article class="reveal">🚀<h3>Superación</h3></article><article class="reveal">⭐<h3>Excelencia</h3></article></div>
+    </section>
 
-          <label>
-            <span>Grado escolar</span>
-            <input name="grado" required placeholder="Ej. 2.º de secundaria">
-          </label>
+    <section class="section roadmap reveal"><p class="eyebrow">Nuestro camino</p><div class="timeline"><div><b>2026</b><span>Nace Rumbo a Ingeniería</span></div><div><b>2027</b><span>Primer equipo docente</span></div><div><b>2028</b><span>Primeros certificados</span></div><div><b>2030</b><span>Horizonte 2030</span></div><div><b>2035</b><span>Institución de referencia</span></div></div></section>
 
-          <label>
-            <span>Materia</span>
-            <select name="materia" required>
-              <option value="">Selecciona una opción</option>
-              <option>Matemáticas</option>
-              <option>Física</option>
-              <option>Inglés</option>
-            </select>
-          </label>
-
-          <label>
-            <span>Modalidad de interés</span>
-            <select name="modalidad">
-              <option value="">Aún no lo sé</option>
-              <option>Clase Estándar</option>
-              <option>Clase Profunda</option>
-              <option>Quiero una recomendación</option>
-            </select>
-          </label>
-
-          <label class="full-width">
-            <span>Horario preferido</span>
-            <input name="horario" placeholder="Ej. martes 6:00 p. m.">
-          </label>
-
-          <label class="full-width">
-            <span>Mensaje</span>
-            <textarea name="mensaje" rows="5" placeholder="Cuéntanos brevemente qué tema necesita reforzar"></textarea>
-          </label>
-        </div>
-
-        <button class="button primary contact-submit" type="submit">Enviar por WhatsApp</button>
-        <p class="form-note">Se abrirá WhatsApp con la información ya organizada.</p>
-      </form>
+    <section id="contacto" class="section contact-section">
+      <div class="contact-copy reveal"><p class="eyebrow">Solicita información</p><h2>Da el primer paso</h2><p>Completa el formulario y se abrirá un mensaje de WhatsApp ordenado con tus datos.</p><div class="contact-lines"><a href="https://wa.me/528713251593">WhatsApp: 871 325 1593</a><a href="mailto:asesorias.academicas.sr@gmail.com">asesorias.academicas.sr@gmail.com</a><span>Lunes a sábado: 5:00–9:00 pm · Domingo: 2:00–8:00 pm</span></div></div>
+      <form id="contact-form" class="contact-form reveal"><label>Nombre del estudiante<input name="nombre" required></label><label>Grado escolar<input name="grado" required></label><label>Materia<select name="materia" required><option value="">Selecciona</option><option>Matemáticas</option><option>Física</option><option>Inglés</option></select></label><label>Modalidad<select name="modalidad"><option>Solicito recomendación</option><option>Clase Estándar (1 hora)</option><option>Clase Profunda (1 h 30 min)</option></select></label><label>Horario preferido<input name="horario" placeholder="Ej. martes 6:00 pm"></label><label>Mensaje<textarea name="mensaje" rows="4" placeholder="Cuéntanos qué tema deseas reforzar"></textarea></label><button class="button primary" type="submit">Enviar por WhatsApp</button></form>
     </section>
   </main>
 
-  <a class="whatsapp-float" href="https://wa.me/528713251593?text=Hola%2C%20quiero%20información%20sobre%20las%20asesorías." target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">WA</a>
+  <footer><div class="footer-brand"><img src="assets/favicon.png" alt=""><div><strong>Rumbo a Ingeniería</strong><span>Aprende hoy. Construye el mañana.</span></div></div><p>Proyecto Orión · Versión 0.7</p></footer>
 
-  <footer>
-    <p><strong>El futuro comienza con el aprendizaje de hoy.</strong></p>
-    <p>© 2026 Rumbo a Ingeniería · Institución educativa en desarrollo · Versión 0.6</p>
-  </footer>
-
+  <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">↑</button>
+  <button id="athena-toggle" class="athena-toggle" aria-label="Abrir asistente Atenea">🤖</button>
+  <section id="athena" class="athena" aria-label="Asistente Atenea"><header><div><strong>Atenea</strong><span>Asistente virtual · Beta</span></div><button id="athena-close">×</button></header><div id="athena-messages" class="athena-messages"><p class="bot">¡Hola! Soy Atenea. Puedo orientarte sobre materias, precios, modalidades y horarios.</p></div><div class="quick-questions"><button>¿Qué materias ofrecen?</button><button>¿Cuánto cuestan las clases?</button><button>¿Cómo agendo?</button></div><form id="athena-form"><input id="athena-input" placeholder="Escribe tu pregunta..."><button>➜</button></form></section>
   <script src="app.js"></script>
 </body>
 </html>
