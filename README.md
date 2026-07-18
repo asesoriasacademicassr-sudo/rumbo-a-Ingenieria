@@ -17,3 +17,6 @@ Sitio web estático preparado para GitHub Pages.
 
 ## Publicación
 Sube `index.html`, `styles.css`, `app.js` y la carpeta `assets` a la raíz del repositorio de GitHub Pages.
+
+
+Versión 0.7.1: corrección de rutas del logotipo y favicon para GitHub Pages.
