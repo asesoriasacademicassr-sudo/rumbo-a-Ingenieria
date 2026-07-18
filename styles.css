@@ -517,3 +517,4 @@ footer{text-align:center;padding:46px 20px;border-top:1px solid var(--line);colo
     grid-template-columns:1fr;
   }
 }
+.trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}.trust-card{padding:20px;border:1px solid #2b3d58;border-radius:18px;background:#0f1b2d}.promise{display:block;margin:20px 0;padding:18px;border-left:4px solid #5aa9ff;background:#12223a}
