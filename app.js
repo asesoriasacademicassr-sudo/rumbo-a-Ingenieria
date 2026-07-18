@@ -1,12 +1,20 @@
 const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
-window.addEventListener('DOMContentLoaded',()=>$('#splash').classList.add('hide'));
+window.addEventListener('load',()=>setTimeout(()=>$('#splash')?.classList.add('hide'),850));
 
 const menu=$('.menu-button'),nav=$('.nav');
 menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',open)});
 $$('.nav a').forEach(a=>a.onclick=()=>nav.classList.remove('open'));
 
-const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.08});
-$$('.reveal').forEach(e=>observer.observe(e));
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.08,rootMargin:'0px 0px -24px'});
+$$('.reveal').forEach((e,i)=>{e.style.animationDelay=`${Math.min((i%4)*70,210)}ms`;observer.observe(e)});
+setTimeout(()=>$$('.hero .reveal, .intro-atenea.reveal').forEach(e=>e.classList.add('visible')),920);
+
+
+$$('.compact-cta').forEach(link=>link.addEventListener('click',()=>{
+ const level=link.dataset.plan;
+ const grade=$('#contact-form [name="grado"]');
+ if(grade&&!grade.value) grade.placeholder=`Ej. ${level==='Primaria'?'5.º de primaria':'2.º de secundaria'}`;
+}));
 
 $('#theme-toggle').onclick=()=>{document.body.classList.toggle('light');$('#theme-toggle').textContent=document.body.classList.contains('light')?'☾':'☀'};
 

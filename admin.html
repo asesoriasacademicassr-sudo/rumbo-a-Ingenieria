@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#07182d">
-  <title>Panel Galileo | Rumbo a Ingeniería v0.9.2</title>
+  <title>Panel Galileo | Rumbo a Ingeniería v0.9.3</title>
   <link rel="icon" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,12 +14,12 @@
 <body>
 <div class="app-shell">
   <aside class="sidebar" id="sidebar">
-    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v0.9.2</small></span></a>
+    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v0.9.3</small></span></a>
     <nav>
       <button class="nav-item active" data-view="dashboard">⌂ <span>Resumen</span></button>
       <button class="nav-item" data-view="students">👨‍🎓 <span>Alumnos</span></button>
       <button class="nav-item" data-view="classes">📅 <span>Clases</span></button>
-      <button class="nav-item" data-view="payments">💳 <span>Pagos</span></button>
+      <button class="nav-item" data-view="payments">💰 <span>Finanzas</span></button>
       <button class="nav-item" data-view="reports">📊 <span>Reportes</span></button>
       <button class="nav-item" data-view="athena">🤖 <span>Atenea</span></button>
     </nav>
@@ -102,12 +102,83 @@
 
     </section>
 
+    
     <section class="view" id="payments-view">
       <div class="section-head">
-        <div><p class="eyebrow">Control financiero</p><h2>Pagos</h2><p>Registra pagos completados y pendientes.</p></div>
-        <button class="primary" id="addPaymentBtn">+ Registrar pago</button>
+        <div>
+          <p class="eyebrow">Centro financiero Galileo</p>
+          <h2>Finanzas</h2>
+          <p>Controla ingresos, egresos, utilidad y cuentas pendientes.</p>
+        </div>
+        <div class="section-actions">
+          <button id="addExpenseBtn">− Registrar egreso</button>
+          <button class="primary" id="addPaymentBtn">+ Registrar ingreso</button>
+        </div>
       </div>
-      <div id="paymentsTable" class="table-wrap"></div>
+
+      <div class="finance-toolbar panel">
+        <label>Periodo
+          <input type="month" id="financeMonth">
+        </label>
+        <label>Buscar
+          <input type="search" id="financeSearch" placeholder="Alumno, concepto o categoría">
+        </label>
+        <label>Tipo
+          <select id="financeTypeFilter">
+            <option value="all">Todos</option>
+            <option value="income">Ingresos</option>
+            <option value="expense">Egresos</option>
+            <option value="pending">Pendientes</option>
+          </select>
+        </label>
+        <button id="financeCurrentMonth">Mes actual</button>
+      </div>
+
+      <div class="finance-stats">
+        <article class="finance-stat income">
+          <span>Ingresos cobrados</span>
+          <strong id="financeIncome">$0</strong>
+          <small id="financeIncomeCount">0 movimientos</small>
+        </article>
+        <article class="finance-stat expense">
+          <span>Egresos</span>
+          <strong id="financeExpenses">$0</strong>
+          <small id="financeExpenseCount">0 movimientos</small>
+        </article>
+        <article class="finance-stat profit">
+          <span>Utilidad neta</span>
+          <strong id="financeProfit">$0</strong>
+          <small>Ingresos menos egresos</small>
+        </article>
+        <article class="finance-stat pending">
+          <span>Por cobrar</span>
+          <strong id="financePending">$0</strong>
+          <small id="financePendingCount">0 pagos pendientes</small>
+        </article>
+      </div>
+
+      <div class="finance-grid">
+        <article class="panel">
+          <div class="panel-head">
+            <div><p class="eyebrow">Flujo del periodo</p><h3>Ingresos contra egresos</h3></div>
+          </div>
+          <div id="financeChart" class="finance-chart"></div>
+        </article>
+        <article class="panel">
+          <div class="panel-head">
+            <div><p class="eyebrow">Distribución</p><h3>Ingresos por modalidad</h3></div>
+          </div>
+          <div id="incomeBreakdown" class="breakdown-list"></div>
+        </article>
+      </div>
+
+      <article class="panel finance-transactions">
+        <div class="panel-head">
+          <div><p class="eyebrow">Libro financiero</p><h3>Movimientos</h3></div>
+          <button id="exportFinanceBtn">Exportar CSV</button>
+        </div>
+        <div id="financeTransactions" class="table-wrap"></div>
+      </article>
     </section>
 
     <section class="view" id="reports-view">
@@ -143,7 +214,7 @@
           <option value="Primaria · Clase Estándar (1 h)" data-price="80">Clase Estándar · 1 hora — $80</option>
           <option value="Primaria · Clase Profunda (1 h 30 min)" data-price="100">Clase Profunda · 1 h 30 min — $100</option>
           <option value="Primaria · Paquete Estándar (4 × 1 h)" data-price="300">Paquete Estándar · 4 × 1 hora — $300</option>
-          <option value="Primaria · Paquete Profundo (4 × 1 h 30 min)" data-price="350">Paquete Profundo · 4 × 1 h 30 min — $350</option>
+          <option value="Primaria · Paquete Profundo (4 × 1 h 30 min)" data-price="360">Paquete Profundo · 4 × 1 h 30 min — $360</option>
         </optgroup>
         <optgroup label="Secundaria">
           <option value="Secundaria · Clase Estándar (1 h)" data-price="120">Clase Estándar · 1 hora — $120</option>
@@ -157,12 +228,47 @@
     <label>Monto (MXN)<input name="amount" id="paymentAmount" type="number" min="0" required></label>
     <p class="form-hint" id="paymentHint">El monto se completa automáticamente según la modalidad.</p>
     <label>Fecha<input name="date" type="date" required></label>
+    <label>Método<select name="method"><option>Transferencia</option><option>Efectivo</option><option>Tarjeta</option><option>Otro</option></select></label>
     <label>Estado<select name="status"><option>Pendiente</option><option>Completado</option></select></label>
     <div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="savePayment">Guardar</button></div>
   </form>
 </dialog>
 
 
+
+
+<dialog id="expenseDialog">
+  <form method="dialog" id="expenseForm">
+    <h3>Registrar egreso</h3>
+    <label>Concepto<input name="concept" required placeholder="Ej. Internet, material o publicidad"></label>
+    <label>Categoría
+      <select name="category" required>
+        <option>Material educativo</option>
+        <option>Tecnología</option>
+        <option>Internet y servicios</option>
+        <option>Publicidad</option>
+        <option>Transporte</option>
+        <option>Administración</option>
+        <option>Otro</option>
+      </select>
+    </label>
+    <label>Monto (MXN)<input name="amount" type="number" min="1" step="1" required></label>
+    <label>Fecha<input name="date" type="date" required></label>
+    <label>Método
+      <select name="method">
+        <option>Efectivo</option>
+        <option>Transferencia</option>
+        <option>Tarjeta</option>
+        <option>Otro</option>
+      </select>
+    </label>
+    <label>Notas<textarea name="notes" rows="3" placeholder="Información opcional"></textarea></label>
+    <div class="dialog-actions">
+      <button value="cancel">Cancelar</button>
+      <button class="primary" value="default" id="saveExpense">Guardar egreso</button>
+    </div>
+  </form>
+</dialog>
 
 <dialog id="profileDialog" class="wide-dialog"><div id="profileContent"></div></dialog>
 <dialog id="academicRecordDialog"><form method="dialog" id="academicRecordForm"><h3 id="recordDialogTitle">Nuevo registro</h3><input type="hidden" name="studentId"><input type="hidden" name="recordType"><label>Título<input name="title" required></label><label>Fecha<input name="date" type="date" required></label><label id="recordValueLabel">Resultado<input name="value"></label><label>Descripción<textarea name="description" rows="4"></textarea></label><div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="saveAcademicRecord">Guardar</button></div></form></dialog>
