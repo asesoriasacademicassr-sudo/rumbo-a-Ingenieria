@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#07182d">
-  <title>Panel Galileo | Rumbo a Ingeniería v0.9.1</title>
+  <title>Panel Galileo | Rumbo a Ingeniería v0.9.2</title>
   <link rel="icon" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 <body>
 <div class="app-shell">
   <aside class="sidebar" id="sidebar">
-    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v0.9.1</small></span></a>
+    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v0.9.2</small></span></a>
     <nav>
       <button class="nav-item active" data-view="dashboard">⌂ <span>Resumen</span></button>
       <button class="nav-item" data-view="students">👨‍🎓 <span>Alumnos</span></button>
@@ -73,7 +73,33 @@
         <div><p class="eyebrow">Agenda Galileo</p><h2>Clases</h2><p>Programa sesiones y registra su estado.</p></div>
         <button class="primary" id="addClassBtn">+ Programar clase</button>
       </div>
+      
+      <div class="calendar-toolbar">
+        <button id="prevMonth" aria-label="Mes anterior">←</button>
+        <div>
+          <small>Calendario mensual</small>
+          <h3 id="calendarTitle">Mes</h3>
+        </div>
+        <button id="todayMonth">Hoy</button>
+        <button id="nextMonth" aria-label="Mes siguiente">→</button>
+      </div>
+      <div class="calendar-layout">
+        <div class="calendar-panel">
+          <div class="calendar-weekdays">
+            <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+          </div>
+          <div id="calendarGrid" class="calendar-grid"></div>
+        </div>
+        <aside class="day-agenda panel">
+          <div class="panel-head">
+            <div><p class="eyebrow">Agenda del día</p><h3 id="selectedDayTitle">Selecciona una fecha</h3></div>
+          </div>
+          <div id="selectedDayClasses" class="list-stack"></div>
+        </aside>
+      </div>
+      <h3 class="table-section-title">Todas las clases</h3>
       <div id="classesTable" class="table-wrap"></div>
+
     </section>
 
     <section class="view" id="payments-view">
@@ -106,7 +132,36 @@
 
 <dialog id="classDialog"><form method="dialog" id="classForm"><h3>Programar clase</h3><label>Alumno<select name="student" required></select></label><label>Materia<select name="subject" required><option>Matemáticas</option><option>Física</option><option>Inglés</option></select></label><label>Fecha<input name="date" type="date" required></label><label>Hora<input name="time" type="time" required></label><label>Duración<select name="duration"><option>60 min</option><option>90 min</option></select></label><label>Estado<select name="status"><option>Pendiente</option><option>Completada</option><option>Cancelada</option></select></label><label>Tema<input name="topic" placeholder="Tema principal"></label><div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="saveClass">Guardar</button></div></form></dialog>
 
-<dialog id="paymentDialog"><form method="dialog" id="paymentForm"><h3>Registrar pago</h3><label>Alumno<select name="student" required></select></label><label>Concepto<select name="concept"><option>Clase individual</option><option>Paquete de 4 clases</option><option>Otro</option></select></label><label>Monto (MXN)<input name="amount" type="number" min="0" required></label><label>Fecha<input name="date" type="date" required></label><label>Estado<select name="status"><option>Pendiente</option><option>Completado</option></select></label><div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="savePayment">Guardar</button></div></form></dialog>
+
+<dialog id="paymentDialog">
+  <form method="dialog" id="paymentForm">
+    <h3>Registrar pago</h3>
+    <label>Alumno<select name="student" required></select></label>
+    <label>Modalidad
+      <select name="concept" id="paymentConcept" required>
+        <optgroup label="Primaria">
+          <option value="Primaria · Clase Estándar (1 h)" data-price="80">Clase Estándar · 1 hora — $80</option>
+          <option value="Primaria · Clase Profunda (1 h 30 min)" data-price="100">Clase Profunda · 1 h 30 min — $100</option>
+          <option value="Primaria · Paquete Estándar (4 × 1 h)" data-price="300">Paquete Estándar · 4 × 1 hora — $300</option>
+          <option value="Primaria · Paquete Profundo (4 × 1 h 30 min)" data-price="350">Paquete Profundo · 4 × 1 h 30 min — $350</option>
+        </optgroup>
+        <optgroup label="Secundaria">
+          <option value="Secundaria · Clase Estándar (1 h)" data-price="120">Clase Estándar · 1 hora — $120</option>
+          <option value="Secundaria · Clase Profunda (1 h 30 min)" data-price="150">Clase Profunda · 1 h 30 min — $150</option>
+          <option value="Secundaria · Paquete Estándar (4 × 1 h)" data-price="450">Paquete Estándar · 4 × 1 hora — $450</option>
+          <option value="Secundaria · Paquete Profundo (4 × 1 h 30 min)" data-price="550">Paquete Profundo · 4 × 1 h 30 min — $550</option>
+        </optgroup>
+        <option value="Otro" data-price="">Otro concepto</option>
+      </select>
+    </label>
+    <label>Monto (MXN)<input name="amount" id="paymentAmount" type="number" min="0" required></label>
+    <p class="form-hint" id="paymentHint">El monto se completa automáticamente según la modalidad.</p>
+    <label>Fecha<input name="date" type="date" required></label>
+    <label>Estado<select name="status"><option>Pendiente</option><option>Completado</option></select></label>
+    <div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="savePayment">Guardar</button></div>
+  </form>
+</dialog>
+
 
 
 <dialog id="profileDialog" class="wide-dialog"><div id="profileContent"></div></dialog>

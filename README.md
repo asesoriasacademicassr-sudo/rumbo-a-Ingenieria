@@ -48,9 +48,32 @@ Abre `admin.html` o pulsa `Panel Galileo` desde la página principal.
 Esta versión es un prototipo local. Los datos se guardan únicamente en el navegador y no cuentan todavía con autenticación ni base de datos en línea.
 
 
-## Proyecto Galileo v0.9.1
+## Proyecto Galileo v0.9.2
 - Precios públicos sencillos para primaria y secundaria.
 - Primera clase gratis destacada.
 - Expediente académico individual.
 - Asistencia, tareas, evaluaciones e historial.
 - Indicadores de progreso por alumno.
+
+
+## Proyecto Galileo v0.9.2
+
+### Calendario visual
+- Vista mensual de lunes a domingo.
+- Navegación entre meses.
+- Identificación del día actual.
+- Selección de fecha para consultar su agenda.
+- Clases visibles directamente dentro de cada día.
+- Botón “Hoy” para regresar rápidamente a la fecha actual.
+
+### Pagos y modalidades
+- Primaria: clase de 1 hora por $80.
+- Primaria: clase de 1 hora 30 minutos por $100.
+- Primaria: paquete de 4 clases de 1 hora por $300.
+- Primaria: paquete de 4 clases de 1 hora 30 minutos por $350.
+- Secundaria: clase de 1 hora por $120.
+- Secundaria: clase de 1 hora 30 minutos por $150.
+- Secundaria: paquete de 4 clases de 1 hora por $450.
+- Secundaria: paquete de 4 clases de 1 hora 30 minutos por $550.
+- Cálculo automático del monto al seleccionar una modalidad.
+- Opción “Otro” para registrar conceptos personalizados.

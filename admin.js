@@ -1,7 +1,7 @@
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const KEY='rai_galileo_v091';
-const OLD_KEY='rai_galileo_v090';
+const KEY='rai_galileo_v092';
+const OLD_KEY='rai_galileo_v091';
 const seed={
  students:[
   {id:1,name:'Valeria M.',age:13,grade:'2° secundaria',subject:'Matemáticas',progress:68,goal:'Mejorar álgebra',notes:'Avanza bien con ejemplos visuales.'},
@@ -20,6 +20,11 @@ const seed={
 let previous=JSON.parse(localStorage.getItem(OLD_KEY)||'null');
 let data=JSON.parse(localStorage.getItem(KEY)||'null')||previous||seed;
 data.students=data.students.map(s=>({...s,attendance:s.attendance||[],tasks:s.tasks||[],grades:s.grades||[],history:s.history||[{id:Date.now()+Math.random(),date:new Date().toISOString().slice(0,10),title:'Perfil creado',description:'Alumno registrado en Proyecto Galileo.'}]}));
+let calendarCursor=new Date();
+calendarCursor.setDate(1);
+let selectedCalendarDate=new Date().toISOString().slice(0,10);
+const MONTHS=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
 const save=()=>localStorage.setItem(KEY,JSON.stringify(data));
 const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(n);
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -71,18 +76,80 @@ window.deleteStudent=id=>{if(confirm('¿Eliminar este alumno?')){data.students=d
 $('#saveStudent').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#studentForm')));if(!fd.name)return;const existing=data.students.find(s=>s.id===Number(fd.id));
 const obj={...fd,id:fd.id?Number(fd.id):Date.now(),age:Number(fd.age),progress:Number(fd.progress),attendance:existing?.attendance||[],tasks:existing?.tasks||[],grades:existing?.grades||[],history:existing?.history||[{id:Date.now(),date:new Date().toISOString().slice(0,10),title:'Perfil creado',description:'Alumno registrado en Proyecto Galileo.'}]};const i=data.students.findIndex(s=>s.id===obj.id);i>=0?data.students[i]=obj:data.students.push(obj);save();$('#studentDialog').close();renderAll()};
 
+
+function isoDate(y,m,d){return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`}
+function renderCalendar(){
+ const title=$('#calendarTitle'),grid=$('#calendarGrid');
+ if(!title||!grid)return;
+ const y=calendarCursor.getFullYear(),m=calendarCursor.getMonth();
+ title.textContent=`${MONTHS[m]} de ${y}`;
+ const first=new Date(y,m,1);
+ const mondayIndex=(first.getDay()+6)%7;
+ const start=new Date(y,m,1-mondayIndex);
+ let cells='';
+ for(let i=0;i<42;i++){
+  const d=new Date(start);d.setDate(start.getDate()+i);
+  const key=isoDate(d.getFullYear(),d.getMonth(),d.getDate());
+  const events=data.classes.filter(c=>c.date===key).sort((a,b)=>a.time.localeCompare(b.time));
+  const classes=events.slice(0,2).map(c=>`<span class="calendar-event ${c.status==='Completada'?'completed':c.status==='Cancelada'?'cancelled':''}">${esc(c.time)} · ${esc(c.student)}</span>`).join('');
+  cells+=`<button class="calendar-day ${d.getMonth()!==m?'outside':''} ${key===new Date().toISOString().slice(0,10)?'today':''} ${key===selectedCalendarDate?'selected':''}" data-date="${key}">
+   <span class="calendar-number">${d.getDate()}</span>
+   <span class="day-events">${classes}${events.length>2?`<small class="more-events">+${events.length-2} más</small>`:''}</span>
+  </button>`;
+ }
+ grid.innerHTML=cells;
+ $$('.calendar-day').forEach(btn=>btn.onclick=()=>{selectedCalendarDate=btn.dataset.date;renderCalendar();renderSelectedDay()});
+ renderSelectedDay();
+}
+function renderSelectedDay(){
+ const container=$('#selectedDayClasses'),heading=$('#selectedDayTitle');
+ if(!container||!heading)return;
+ const [y,m,d]=selectedCalendarDate.split('-').map(Number);
+ const label=new Intl.DateTimeFormat('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(y,m-1,d));
+ heading.textContent=label.charAt(0).toUpperCase()+label.slice(1);
+ const list=data.classes.filter(c=>c.date===selectedCalendarDate).sort((a,b)=>a.time.localeCompare(b.time));
+ container.innerHTML=list.map(c=>`<article class="day-class"><time>${esc(c.time)} · ${esc(c.duration)}</time><h4>${esc(c.student)}</h4><p>${esc(c.subject)} · ${esc(c.topic||'Tema pendiente')}</p><span class="badge-status ${c.status==='Completada'?'completed':c.status==='Cancelada'?'cancelled':'pending'}">${esc(c.status)}</span></article>`).join('')||'<div class="empty">No hay clases programadas para este día.</div>';
+}
+$('#prevMonth').onclick=()=>{calendarCursor.setMonth(calendarCursor.getMonth()-1);renderCalendar()};
+$('#nextMonth').onclick=()=>{calendarCursor.setMonth(calendarCursor.getMonth()+1);renderCalendar()};
+$('#todayMonth').onclick=()=>{calendarCursor=new Date();calendarCursor.setDate(1);selectedCalendarDate=new Date().toISOString().slice(0,10);renderCalendar()};
+
 function renderClasses(){
+ renderCalendar();
  $('#classesTable').innerHTML=`<table><thead><tr><th>Alumno</th><th>Materia</th><th>Fecha</th><th>Hora</th><th>Duración</th><th>Tema</th><th>Estado</th><th></th></tr></thead><tbody>${data.classes.map(c=>`<tr><td>${esc(c.student)}</td><td>${esc(c.subject)}</td><td>${esc(c.date)}</td><td>${esc(c.time)}</td><td>${esc(c.duration)}</td><td>${esc(c.topic)}</td><td><span class="badge-status ${c.status==='Pendiente'?'pending':c.status==='Completada'?'completed':'cancelled'}">${esc(c.status)}</span></td><td><button onclick="deleteClass(${c.id})">Eliminar</button></td></tr>`).join('')}</tbody></table>`;
 }
-$('#addClassBtn').onclick=()=>{updateStudentSelects();$('#classForm').reset();$('#classDialog').showModal()};
+$('#addClassBtn').onclick=()=>{updateStudentSelects();$('#classForm').reset();$('#classForm [name=date]').value=selectedCalendarDate;$('#classDialog').showModal()};
 $('#saveClass').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#classForm')));if(!fd.student||!fd.date)return;data.classes.push({...fd,id:Date.now()});save();$('#classDialog').close();renderAll()};
 window.deleteClass=id=>{if(confirm('¿Eliminar esta clase?')){data.classes=data.classes.filter(c=>c.id!==id);save();renderAll()}};
 
+
+const PAYMENT_PRICES={
+ 'Primaria · Clase Estándar (1 h)':80,
+ 'Primaria · Clase Profunda (1 h 30 min)':100,
+ 'Primaria · Paquete Estándar (4 × 1 h)':300,
+ 'Primaria · Paquete Profundo (4 × 1 h 30 min)':350,
+ 'Secundaria · Clase Estándar (1 h)':120,
+ 'Secundaria · Clase Profunda (1 h 30 min)':150,
+ 'Secundaria · Paquete Estándar (4 × 1 h)':450,
+ 'Secundaria · Paquete Profundo (4 × 1 h 30 min)':550
+};
+
 function renderPayments(){
- $('#paymentsTable').innerHTML=`<table><thead><tr><th>Alumno</th><th>Concepto</th><th>Monto</th><th>Fecha</th><th>Estado</th><th></th></tr></thead><tbody>${data.payments.map(p=>`<tr><td>${esc(p.student)}</td><td>${esc(p.concept)}</td><td>${money(p.amount)}</td><td>${esc(p.date)}</td><td><span class="badge-status ${p.status==='Completado'?'completed':'pending'}">${esc(p.status)}</span></td><td><button onclick="togglePayment(${p.id})">${p.status==='Completado'?'Marcar pendiente':'Marcar pagado'}</button> <button onclick="deletePayment(${p.id})">Eliminar</button></td></tr>`).join('')}</tbody></table>`;
+ $('#paymentsTable').innerHTML=`<div class="payment-price-grid">
+ <article><small>Primaria · 1 h</small><strong>$80</strong></article>
+ <article><small>Primaria · 1 h 30 min</small><strong>$100</strong></article>
+ <article><small>Secundaria · 1 h</small><strong>$120</strong></article>
+ <article><small>Secundaria · 1 h 30 min</small><strong>$150</strong></article>
+ </div><table><thead><tr><th>Alumno</th><th>Concepto</th><th>Monto</th><th>Fecha</th><th>Estado</th><th></th></tr></thead><tbody>${data.payments.map(p=>`<tr><td>${esc(p.student)}</td><td>${esc(p.concept)}</td><td>${money(p.amount)}</td><td>${esc(p.date)}</td><td><span class="badge-status ${p.status==='Completado'?'completed':'pending'}">${esc(p.status)}</span></td><td><button onclick="togglePayment(${p.id})">${p.status==='Completado'?'Marcar pendiente':'Marcar pagado'}</button> <button onclick="deletePayment(${p.id})">Eliminar</button></td></tr>`).join('')}</tbody></table>`;
 }
-$('#addPaymentBtn').onclick=()=>{updateStudentSelects();$('#paymentForm').reset();$('#paymentDialog').showModal()};
-$('#savePayment').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#paymentForm')));if(!fd.student)return;data.payments.push({...fd,id:Date.now(),amount:Number(fd.amount)});save();$('#paymentDialog').close();renderAll()};
+function syncPaymentAmount(){
+ const select=$('#paymentConcept'),option=select?.selectedOptions?.[0],price=option?.dataset?.price;
+ if(price!==''){$('#paymentAmount').value=price;$('#paymentAmount').readOnly=true;$('#paymentHint').textContent='Precio establecido automáticamente para esta modalidad.'}
+ else{$('#paymentAmount').value='';$('#paymentAmount').readOnly=false;$('#paymentHint').textContent='Escribe manualmente el monto del concepto personalizado.'}
+}
+$('#paymentConcept').onchange=syncPaymentAmount;
+$('#addPaymentBtn').onclick=()=>{updateStudentSelects();$('#paymentForm').reset();$('#paymentForm [name=date]').value=new Date().toISOString().slice(0,10);syncPaymentAmount();$('#paymentDialog').showModal()};
+$('#savePayment').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#paymentForm')));if(!fd.student||!fd.concept)return;const automatic=PAYMENT_PRICES[fd.concept];data.payments.push({...fd,id:Date.now(),amount:automatic??Number(fd.amount)});save();$('#paymentDialog').close();renderAll()};
 window.togglePayment=id=>{const p=data.payments.find(x=>x.id===id);p.status=p.status==='Completado'?'Pendiente':'Completado';save();renderAll()};
 window.deletePayment=id=>{if(confirm('¿Eliminar este registro?')){data.payments=data.payments.filter(p=>p.id!==id);save();renderAll()}};
 
