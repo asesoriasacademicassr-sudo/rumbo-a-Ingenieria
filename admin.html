@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#07182d">
-  <title>Panel Galileo | Rumbo a Ingeniería v0.9</title>
+  <title>Panel Galileo | Rumbo a Ingeniería v0.9.1</title>
   <link rel="icon" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 <body>
 <div class="app-shell">
   <aside class="sidebar" id="sidebar">
-    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v0.9</small></span></a>
+    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v0.9.1</small></span></a>
     <nav>
       <button class="nav-item active" data-view="dashboard">⌂ <span>Resumen</span></button>
       <button class="nav-item" data-view="students">👨‍🎓 <span>Alumnos</span></button>
@@ -108,6 +108,9 @@
 
 <dialog id="paymentDialog"><form method="dialog" id="paymentForm"><h3>Registrar pago</h3><label>Alumno<select name="student" required></select></label><label>Concepto<select name="concept"><option>Clase individual</option><option>Paquete de 4 clases</option><option>Otro</option></select></label><label>Monto (MXN)<input name="amount" type="number" min="0" required></label><label>Fecha<input name="date" type="date" required></label><label>Estado<select name="status"><option>Pendiente</option><option>Completado</option></select></label><div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="savePayment">Guardar</button></div></form></dialog>
 
+
+<dialog id="profileDialog" class="wide-dialog"><div id="profileContent"></div></dialog>
+<dialog id="academicRecordDialog"><form method="dialog" id="academicRecordForm"><h3 id="recordDialogTitle">Nuevo registro</h3><input type="hidden" name="studentId"><input type="hidden" name="recordType"><label>Título<input name="title" required></label><label>Fecha<input name="date" type="date" required></label><label id="recordValueLabel">Resultado<input name="value"></label><label>Descripción<textarea name="description" rows="4"></textarea></label><div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="saveAcademicRecord">Guardar</button></div></form></dialog>
 <script src="admin.js"></script>
 </body>
 </html>

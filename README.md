@@ -46,3 +46,11 @@ Abre `admin.html` o pulsa `Panel Galileo` desde la página principal.
 
 ## Importante
 Esta versión es un prototipo local. Los datos se guardan únicamente en el navegador y no cuentan todavía con autenticación ni base de datos en línea.
+
+
+## Proyecto Galileo v0.9.1
+- Precios públicos sencillos para primaria y secundaria.
+- Primera clase gratis destacada.
+- Expediente académico individual.
+- Asistencia, tareas, evaluaciones e historial.
+- Indicadores de progreso por alumno.
