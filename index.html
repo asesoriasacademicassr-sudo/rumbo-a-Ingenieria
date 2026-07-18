@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="preload" as="image" href="atenea.jpg">
 </head>
 <body>
 <canvas id="stars" aria-hidden="true"></canvas>
@@ -61,7 +62,7 @@
 </section>
 
 <section class="section intro-atenea reveal">
-  <div class="atenea-portrait"><img src="atenea.png" alt="Atenea, asistente de Rumbo a Ingeniería"></div>
+  <div class="atenea-portrait"><img src="atenea.jpg" alt="Atenea, asistente de Rumbo a Ingeniería"></div>
   <div>
     <p class="eyebrow">Conoce a Atenea</p>
     <h2>Tu guía durante el aprendizaje</h2>
@@ -188,7 +189,7 @@
     <div class="diagnostic-main">
       <div class="diagnostic-top"><span id="question-counter">Pregunta 1 de 10</span><span>Tiempo estimado: 4 min</span></div>
       <div class="progress"><i id="progress-bar"></i></div>
-      <div class="athena-tip"><img src="atenea.png" alt=""><p id="athena-test-tip">Tómate tu tiempo. Esto no es un examen oficial.</p></div>
+      <div class="athena-tip"><img src="atenea.jpg" alt=""><p id="athena-test-tip">Tómate tu tiempo. Esto no es un examen oficial.</p></div>
       <form id="diagnostic-form">
         <div id="question-stage"></div>
         <div class="diagnostic-actions">
@@ -244,10 +245,10 @@
 <button id="back-to-top" aria-label="Volver arriba">↑</button>
 
 <button id="athena-toggle" class="athena-toggle" aria-label="Abrir asistente Atenea">
-  <img src="atenea.png" alt=""><span>¿Necesitas ayuda?</span>
+  <img src="atenea.jpg" alt=""><span>¿Necesitas ayuda?</span>
 </button>
 <aside id="athena" class="athena" aria-label="Asistente Atenea">
-  <header><img src="atenea.png" alt=""><div><b>Atenea</b><span>Guía académica</span></div><button id="athena-close">×</button></header>
+  <header><img src="atenea.jpg" alt=""><div><b>Atenea</b><span>Guía académica</span></div><button id="athena-close">×</button></header>
   <div id="athena-messages" class="athena-messages"><p class="bot">¡Hola! Soy Atenea. Puedo ayudarte con materias, precios, horarios, orientación y recursos.</p></div>
   <div class="quick-questions">
     <button>¿Qué materias ofrecen?</button><button>¿Cuánto cuestan?</button><button>¿Qué modalidad me conviene?</button><button>¿Cómo agendo?</button>

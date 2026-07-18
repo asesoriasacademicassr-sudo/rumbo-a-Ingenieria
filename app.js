@@ -1,5 +1,5 @@
 const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
-window.addEventListener('load',()=>setTimeout(()=>$('#splash').classList.add('hide'),650));
+window.addEventListener('DOMContentLoaded',()=>$('#splash').classList.add('hide'));
 
 const menu=$('.menu-button'),nav=$('.nav');
 menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',open)});
@@ -15,9 +15,9 @@ addEventListener('scroll',()=>topBtn.classList.toggle('show',scrollY>500));
 topBtn.onclick=()=>scrollTo({top:0,behavior:'smooth'});
 
 const canvas=$('#stars'),ctx=canvas.getContext('2d');let stars=[];
-function resize(){canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio;stars=Array.from({length:Math.min(115,Math.floor(innerWidth/10))},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:(Math.random()*1.15+.2)*devicePixelRatio,a:Math.random()*.45+.12,s:(Math.random()*.015+.004)*devicePixelRatio}))}
+function resize(){canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio;stars=Array.from({length:Math.min(innerWidth<700?30:65,Math.floor(innerWidth/14))},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:(Math.random()*1.15+.2)*devicePixelRatio,a:Math.random()*.45+.12,s:(Math.random()*.015+.004)*devicePixelRatio}))}
 function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);stars.forEach(s=>{s.y+=s.s;if(s.y>canvas.height)s.y=0;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${s.a})`;ctx.fill()});requestAnimationFrame(draw)}
-addEventListener('resize',resize);resize();draw();
+if(innerWidth>=700){addEventListener('resize',resize);resize();draw()}else{canvas.style.display='none'}
 
 const state=JSON.parse(localStorage.getItem('rai-v08-state')||'{}');
 state.name=state.name||'Explorador en formación';

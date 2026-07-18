@@ -21,3 +21,20 @@ footer{width:min(1180px,calc(100% - 36px));margin:auto;padding:32px 0 45px;borde
 @media(max-width:1000px){.dashboard-grid{grid-template-columns:1fr 1fr}.profile-card{grid-column:1/-1}.badges-grid{grid-template-columns:repeat(3,1fr)}.resource-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:860px){.menu-button{display:block}.nav{position:absolute;top:72px;left:16px;right:16px;padding:18px;border:1px solid var(--line);background:#081a2e;border-radius:18px;display:none;flex-direction:column;align-items:stretch}.nav.open{display:flex}.hero,.intro-atenea,.two-columns,.contact-section,.diagnostic-shell{grid-template-columns:1fr}.hero{padding-top:48px;min-height:auto}.hero-visual{order:-1}.mission-grid{grid-template-columns:1fr}.diagnostic-side{display:none}.orbit{width:360px;height:360px}}
 @media(max-width:620px){.section{width:min(100% - 24px,1180px);padding:62px 0}.site-header{padding:9px 13px}.brand span{display:none}.hero h1{font-size:3rem}.hero-actions .button{width:100%}.intro-atenea{padding:18px}.atenea-portrait,.atenea-portrait img{height:320px;min-height:320px}.dashboard-grid,.resource-grid,.honor-grid,.score-grid{grid-template-columns:1fr}.profile-card{grid-template-columns:auto 1fr}.profile-card .mini-button{grid-column:1/-1}.badges-grid{grid-template-columns:1fr 1fr}.resource-tools{display:grid}.resource-tools input{max-width:none}.diagnostic-top{display:grid;gap:5px}.contact-form{grid-template-columns:1fr}.contact-form label,.contact-form button{grid-column:1!important}footer{flex-direction:column;align-items:flex-start}.athena-toggle span{display:none}}
+
+img{max-width:100%;height:auto}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  #stars{display:none}
+}
+@media (max-width:700px){
+  #stars{display:none}
+  .splash{display:none}
+  .reveal{opacity:1;transform:none;transition:none}
+  .orbit{animation:none}
+  .hero-visual img{box-shadow:0 12px 30px rgba(0,0,0,.18)}
+  .profile-card,.metric-card,.mission-card,.badge,.resource-card,.calendar-card,.challenge-card,.honor-card,.diagnostic-main,.contact-form{box-shadow:0 8px 24px rgba(0,0,0,.16)}
+  .atenea-portrait{min-height:260px}
+  .atenea-portrait img{height:300px;object-fit:contain;background:transparent}
+}

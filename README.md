@@ -16,3 +16,10 @@ Versión centrada en la experiencia del estudiante.
 
 ## Publicación en GitHub Pages
 Sube todos los archivos del ZIP a la raíz del repositorio y reemplaza los anteriores.
+
+
+## v0.8.1
+- Nueva imagen de Atenea.
+- Imagen comprimida.
+- Menos partículas y efectos en celular.
+- Carga inicial más rápida.
