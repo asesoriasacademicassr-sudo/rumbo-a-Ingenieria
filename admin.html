@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07182d">
+  <title>Panel Galileo | Rumbo a Ingeniería v0.9</title>
+  <link rel="icon" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v0.9</small></span></a>
+    <nav>
+      <button class="nav-item active" data-view="dashboard">⌂ <span>Resumen</span></button>
+      <button class="nav-item" data-view="students">👨‍🎓 <span>Alumnos</span></button>
+      <button class="nav-item" data-view="classes">📅 <span>Clases</span></button>
+      <button class="nav-item" data-view="payments">💳 <span>Pagos</span></button>
+      <button class="nav-item" data-view="reports">📊 <span>Reportes</span></button>
+      <button class="nav-item" data-view="athena">🤖 <span>Atenea</span></button>
+    </nav>
+    <div class="sidebar-bottom">
+      <button id="themeToggle">☀ Cambiar tema</button>
+      <a href="index.html">← Volver al sitio</a>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <button id="menuBtn" aria-label="Abrir menú">☰</button>
+      <div><small>Panel del fundador</small><h1 id="viewTitle">Resumen general</h1></div>
+      <div class="founder"><span>SR</span><div><b>Fundador</b><small>Administrador</small></div></div>
+    </header>
+
+    <section class="view active" id="dashboard-view">
+      <div class="welcome-card">
+        <div><p class="eyebrow">Proyecto Galileo</p><h2>Controla la misión educativa desde un solo lugar.</h2><p>Este prototipo funciona sin servidor y guarda los datos en el dispositivo mediante almacenamiento local.</p></div>
+        <img src="atenea.jpg" alt="Atenea">
+      </div>
+      <div class="stats-grid">
+        <article><span>Alumnos activos</span><strong id="statStudents">0</strong><small>registrados localmente</small></article>
+        <article><span>Próximas clases</span><strong id="statClasses">0</strong><small>pendientes</small></article>
+        <article><span>Pagos pendientes</span><strong id="statPending">$0</strong><small>MXN</small></article>
+        <article><span>Progreso promedio</span><strong id="statProgress">0%</strong><small>grupo general</small></article>
+      </div>
+      <div class="dashboard-columns">
+        <article class="panel">
+          <div class="panel-head"><div><p class="eyebrow">Agenda</p><h3>Próximas clases</h3></div><button data-go="classes">Ver todas</button></div>
+          <div id="upcomingList" class="list-stack"></div>
+        </article>
+        <article class="panel">
+          <div class="panel-head"><div><p class="eyebrow">Atención</p><h3>Alertas administrativas</h3></div></div>
+          <div id="alertsList" class="list-stack"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" id="students-view">
+      <div class="section-head">
+        <div><p class="eyebrow">Gestión académica</p><h2>Alumnos</h2><p>Registra perfiles, materias, progreso y observaciones.</p></div>
+        <button class="primary" id="addStudentBtn">+ Nuevo alumno</button>
+      </div>
+      <div class="toolbar"><input id="studentSearch" type="search" placeholder="Buscar por nombre, grado o materia..."><select id="studentFilter"><option value="all">Todas las materias</option><option>Matemáticas</option><option>Física</option><option>Inglés</option></select></div>
+      <div id="studentsGrid" class="students-grid"></div>
+    </section>
+
+    <section class="view" id="classes-view">
+      <div class="section-head">
+        <div><p class="eyebrow">Agenda Galileo</p><h2>Clases</h2><p>Programa sesiones y registra su estado.</p></div>
+        <button class="primary" id="addClassBtn">+ Programar clase</button>
+      </div>
+      <div id="classesTable" class="table-wrap"></div>
+    </section>
+
+    <section class="view" id="payments-view">
+      <div class="section-head">
+        <div><p class="eyebrow">Control financiero</p><h2>Pagos</h2><p>Registra pagos completados y pendientes.</p></div>
+        <button class="primary" id="addPaymentBtn">+ Registrar pago</button>
+      </div>
+      <div id="paymentsTable" class="table-wrap"></div>
+    </section>
+
+    <section class="view" id="reports-view">
+      <div class="section-head"><div><p class="eyebrow">Seguimiento</p><h2>Reportes</h2><p>Resumen académico y administrativo del grupo.</p></div><button class="primary" id="printReport">Imprimir reporte</button></div>
+      <div class="report-grid">
+        <article class="panel"><h3>Progreso por materia</h3><div id="subjectBars"></div></article>
+        <article class="panel"><h3>Indicadores generales</h3><div id="reportMetrics" class="metric-list"></div></article>
+      </div>
+      <article class="panel report-table"><h3>Resumen de alumnos</h3><div id="reportStudents"></div></article>
+    </section>
+
+    <section class="view" id="athena-view">
+      <div class="athena-admin">
+        <div class="athena-visual"><img src="atenea.jpg" alt="Atenea"></div>
+        <div class="athena-content"><p class="eyebrow">Atenea Administrativa · Prototipo</p><h2>Consulta rápidamente el estado de la plataforma</h2><div id="athenaChat" class="chat"><p class="bot">Hola. Puedo mostrarte alumnos, clases, pagos pendientes y progreso general.</p></div><div class="quick-actions"><button>¿Cuántos alumnos hay?</button><button>¿Quién tiene clase próxima?</button><button>¿Cuánto falta por cobrar?</button><button>¿Cuál es el progreso promedio?</button></div><form id="athenaAdminForm"><input id="athenaAdminInput" placeholder="Escribe una pregunta administrativa..."><button>Enviar</button></form></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<dialog id="studentDialog"><form method="dialog" id="studentForm"><h3>Registrar alumno</h3><input type="hidden" name="id"><label>Nombre<input name="name" required></label><label>Edad<input name="age" type="number" min="5" max="99" required></label><label>Grado escolar<input name="grade" required placeholder="Ej. 2° secundaria"></label><label>Materia<select name="subject" required><option>Matemáticas</option><option>Física</option><option>Inglés</option></select></label><label>Progreso (%)<input name="progress" type="number" min="0" max="100" value="25" required></label><label>Objetivo<textarea name="goal" rows="3"></textarea></label><label>Observaciones<textarea name="notes" rows="3"></textarea></label><div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="saveStudent">Guardar</button></div></form></dialog>
+
+<dialog id="classDialog"><form method="dialog" id="classForm"><h3>Programar clase</h3><label>Alumno<select name="student" required></select></label><label>Materia<select name="subject" required><option>Matemáticas</option><option>Física</option><option>Inglés</option></select></label><label>Fecha<input name="date" type="date" required></label><label>Hora<input name="time" type="time" required></label><label>Duración<select name="duration"><option>60 min</option><option>90 min</option></select></label><label>Estado<select name="status"><option>Pendiente</option><option>Completada</option><option>Cancelada</option></select></label><label>Tema<input name="topic" placeholder="Tema principal"></label><div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="saveClass">Guardar</button></div></form></dialog>
+
+<dialog id="paymentDialog"><form method="dialog" id="paymentForm"><h3>Registrar pago</h3><label>Alumno<select name="student" required></select></label><label>Concepto<select name="concept"><option>Clase individual</option><option>Paquete de 4 clases</option><option>Otro</option></select></label><label>Monto (MXN)<input name="amount" type="number" min="0" required></label><label>Fecha<input name="date" type="date" required></label><label>Estado<select name="status"><option>Pendiente</option><option>Completado</option></select></label><div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="savePayment">Guardar</button></div></form></dialog>
+
+<script src="admin.js"></script>
+</body>
+</html>

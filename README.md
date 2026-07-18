@@ -23,3 +23,26 @@ Sube todos los archivos del ZIP a la raíz del repositorio y reemplaza los anter
 - Imagen comprimida.
 - Menos partículas y efectos en celular.
 - Carga inicial más rápida.
+
+
+# Proyecto Galileo v0.9.0
+
+Nueva fase administrativa de Rumbo a Ingeniería.
+
+## Funciones incluidas
+- Panel del fundador.
+- Estadísticas generales.
+- Administración de alumnos.
+- Registro de clases.
+- Control de pagos.
+- Reportes académicos.
+- Atenea Administrativa.
+- Guardado local con localStorage.
+- Diseño adaptable a celular.
+- Modo claro y oscuro.
+
+## Acceso
+Abre `admin.html` o pulsa `Panel Galileo` desde la página principal.
+
+## Importante
+Esta versión es un prototipo local. Los datos se guardan únicamente en el navegador y no cuentan todavía con autenticación ni base de datos en línea.
