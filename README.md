@@ -1,22 +1,18 @@
-# Rumbo a Ingeniería v0.7 — Proyecto Orión
+# Rumbo a Ingeniería v0.8 — Proyecto Andrómeda
 
-Sitio web estático preparado para GitHub Pages.
+Versión centrada en la experiencia del estudiante.
 
 ## Novedades
-- Logotipo oficial y favicon integrados.
-- Rediseño visual completo y adaptable a celular.
-- Pantalla de bienvenida y fondo espacial animado.
-- Orientación Inicial 2.0 con 10 preguntas, progreso y reporte por materia.
-- Biblioteca con buscador y filtros.
-- Asistente virtual Atenea (preguntas frecuentes).
-- Video de bienvenida preparado.
-- Caso de éxito demostrativo.
-- Valores, estadísticas, línea del tiempo y Visión 2035.
-- Formulario de WhatsApp ordenado al número 871 325 1593.
-- Modo claro/oscuro y botón para volver arriba.
+- Atenea integrada como asistente y guía de la orientación.
+- Prototipo de perfil del estudiante con guardado local.
+- Misiones espaciales interactivas.
+- Sistema de insignias.
+- Biblioteca 2.0 con búsqueda y filtros.
+- Calendario académico y reto semanal.
+- Muro de Honor.
+- Orientación Inicial 2.1 con mensajes de Atenea.
+- Diseño adaptable a celular y computadora.
+- WhatsApp actualizado: 871 325 1593.
 
-## Publicación
-Sube `index.html`, `styles.css`, `app.js` y la carpeta `assets` a la raíz del repositorio de GitHub Pages.
-
-
-Versión 0.7.1: corrección de rutas del logotipo y favicon para GitHub Pages.
+## Publicación en GitHub Pages
+Sube todos los archivos del ZIP a la raíz del repositorio y reemplaza los anteriores.
