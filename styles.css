@@ -518,3 +518,8 @@ footer{text-align:center;padding:46px 20px;border-top:1px solid var(--line);colo
   }
 }
 .trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}.trust-card{padding:20px;border:1px solid #2b3d58;border-radius:18px;background:#0f1b2d}.promise{display:block;margin:20px 0;padding:18px;border-left:4px solid #5aa9ff;background:#12223a}
+/* Versión 0.6: diagnóstico más compacto */
+.diagnostic-form{gap:10px}
+.diagnostic-form fieldset{padding:12px 14px;border-radius:14px}
+.diagnostic-form legend{font-size:.94rem;line-height:1.3}
+.diagnostic-form fieldset label{margin-top:6px;font-size:.91rem;line-height:1.25}

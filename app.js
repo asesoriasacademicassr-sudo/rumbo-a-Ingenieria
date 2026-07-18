@@ -31,15 +31,27 @@ form.addEventListener('submit', event => {
   const data = new FormData(form);
   const text = [
     'Hola, quiero solicitar información para una asesoría.',
-    `Nombre: ${data.get('nombre')}`,
-    `Grado: ${data.get('grado')}`,
-    `Materia: ${data.get('materia')}`,
-    `Modalidad: ${data.get('modalidad') || 'Solicito recomendación'}`,
-    `Horario preferido: ${data.get('horario') || 'Por definir'}`,
-    `Mensaje: ${data.get('mensaje') || 'Sin mensaje adicional'}`
+    '━━━━━━━━━━━━━━━━━━━━',
+    'SOLICITUD DE INFORMACIÓN',
+    'Rumbo a Ingeniería',
+    '━━━━━━━━━━━━━━━━━━━━',
+    '',
+    '👤 DATOS DEL ESTUDIANTE',
+    `• Nombre: ${data.get('nombre')}`,
+    `• Grado escolar: ${data.get('grado')}`,
+    '',
+    '📚 ASESORÍA SOLICITADA',
+    `• Materia: ${data.get('materia')}`,
+    `• Modalidad: ${data.get('modalidad') || 'Solicito recomendación'}`,
+    `• Horario preferido: ${data.get('horario') || 'Por definir'}`,
+    '',
+    '📝 INFORMACIÓN ADICIONAL',
+    `${data.get('mensaje') || 'Sin mensaje adicional'}`,
+    '',
+    'Gracias. Quedo atento(a) a su respuesta.'
   ].join('\\n');
 
-  window.open(`https://wa.me/526143531725?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+  window.open(`https://wa.me/528713251593?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
 });
 
 // Fondo espacial sutil: baja opacidad y movimiento muy lento.
@@ -118,26 +130,26 @@ if (diagnosticForm) {
     event.preventDefault();
 
     const data = new FormData(diagnosticForm);
-    const answers = ['q1','q2','q3','q4','q5','q6'];
+    const answers = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'];
 
     if (answers.some(name => !data.has(name))) {
-      diagnosticResult.innerHTML = '<span>Responde las seis preguntas antes de ver tu orientación.</span>';
+      diagnosticResult.innerHTML = '<span>Responde las diez preguntas antes de ver tu orientación.</span>';
       return;
     }
 
-    const math = Number(data.get('q1')) + Number(data.get('q2'));
-    const physics = Number(data.get('q3')) + Number(data.get('q4'));
-    const english = Number(data.get('q5')) + Number(data.get('q6'));
+    const math = ['q1','q2','q3','q4'].reduce((sum, q) => sum + Number(data.get(q)), 0);
+    const physics = ['q5','q6','q7'].reduce((sum, q) => sum + Number(data.get(q)), 0);
+    const english = ['q8','q9','q10'].reduce((sum, q) => sum + Number(data.get(q)), 0);
 
     const scores = [
-      { name: 'Matemáticas', value: math },
-      { name: 'Física', value: physics },
-      { name: 'Inglés', value: english }
+      { name: 'Matemáticas', value: math / 4 },
+      { name: 'Física', value: physics / 3 },
+      { name: 'Inglés', value: english / 3 }
     ];
 
     const lowest = [...scores].sort((a, b) => a.value - b.value)[0];
     const total = math + physics + english;
-    const percent = Math.round((total / 6) * 100);
+    const percent = Math.round((total / 10) * 100);
 
     diagnosticResult.innerHTML = `
       <strong>Resultado general: ${percent}%</strong><br>

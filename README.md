@@ -2,7 +2,7 @@
 
 ## Novedades
 - Calculadora de promedio funcional.
-- Diagnóstico Rápido de demostración con seis preguntas.
+- Diagnóstico Rápido de demostración con diez preguntas.
 - Resultado general y recomendación de área por reforzar.
 - Comparación clara entre Diagnóstico Rápido y EIA.
 - Mensaje de la EIA orientado a una mejor experiencia de aprendizaje.
@@ -13,3 +13,5 @@ El Diagnóstico Rápido incluido en esta versión es una demostración inicial. 
 
 ## Cómo abrir
 Descomprime el archivo y abre `index.html`.
+
+Versión 0.6: orientación inicial ampliada a 10 preguntas, diseño más compacto, formato ordenado para mensajes de WhatsApp y nuevo número de contacto 871 325 1593.
