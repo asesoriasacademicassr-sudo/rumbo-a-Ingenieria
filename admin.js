@@ -18,8 +18,8 @@ setTimeout(()=>{
  }
 },3800);
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const KEY='rai_horizonte_v100';
-const OLD_KEY='rai_galileo_v095';
+const KEY='rai_horizonte_v110';
+const OLD_KEY='rai_horizonte_v100';
 const seed={
  students:[
   {id:1,name:'Valeria M.',age:13,grade:'2° secundaria',subject:'Matemáticas',progress:68,goal:'Mejorar álgebra',notes:'Avanza bien con ejemplos visuales.'},
@@ -48,6 +48,9 @@ data.packages=Array.isArray(data.packages)?data.packages:[];
 data.notifications=Array.isArray(data.notifications)?data.notifications:[];
 data.certificates=Array.isArray(data.certificates)?data.certificates:[];
 data.portalUsers=Array.isArray(data.portalUsers)?data.portalUsers:[];
+data.guardians=Array.isArray(data.guardians)?data.guardians:[];
+data.resources=Array.isArray(data.resources)?data.resources:[{id:101,title:'Guía de fracciones',subject:'Matemáticas',type:'Guía',level:'Primaria',description:'Repaso de operaciones con fracciones.',url:''},{id:102,title:'Leyes de Newton',subject:'Física',type:'Lectura',level:'Secundaria',description:'Resumen con ejemplos cotidianos.',url:''},{id:103,title:'Daily English Practice',subject:'Inglés',type:'Ejercicio',level:'Todos',description:'Práctica corta de vocabulario y conversación.',url:''}];
+data.messages=Array.isArray(data.messages)?data.messages:[];
 data.students.forEach(s=>{
  if(!data.portalUsers.some(u=>u.studentId===s.id)){
   data.portalUsers.push({studentId:s.id,pin:String(1000+(Number(s.id)%9000)),active:true});
@@ -75,7 +78,7 @@ function navigate(view){
  $$('.view').forEach(v=>v.classList.remove('active'));
  $(`#${view}-view`).classList.add('active');
  $$('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
- const titles={dashboard:'Resumen general',students:'Administración de alumnos',classes:'Agenda de clases',payments:'Centro financiero',packages:'Paquetes de clases',notifications:'Centro de notificaciones',certificates:'Certificados y diplomas',reports:'Reportes',athena:'Atenea Administrativa'};
+ const titles={dashboard:'Resumen general',students:'Administración de alumnos',classes:'Agenda de clases',payments:'Centro financiero',families:'Padres y tutores',resources:'Biblioteca de recursos',messages:'Mensajes',packages:'Paquetes de clases',notifications:'Centro de notificaciones',certificates:'Certificados y diplomas',reports:'Reportes',athena:'Atenea Administrativa'};
  $('#viewTitle').textContent=titles[view];
  $('#sidebar').classList.remove('open');
  renderAll();
@@ -462,6 +465,22 @@ $('#resetDataBtn').onclick=()=>{
  save();applySettings();renderAll();$('#settingsDialog').close();toast('Datos reiniciados.');
 };
 
+
+let resourceFilter='all';
+function studentById(id){return data.students.find(s=>s.id===Number(id))}
+function guardianStudentName(g){return studentById(g.studentId)?.name||'Alumno no encontrado'}
+function populateFamilySelects(){const opts=data.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');if($('#guardianStudent'))$('#guardianStudent').innerHTML=opts;updateMessageRecipients()}
+function renderGuardians(){$('#guardianCount').textContent=data.guardians.length;$('#guardianActive').textContent=data.guardians.filter(g=>g.status==='Activo').length;$('#guardianStudents').textContent=new Set(data.guardians.map(g=>g.studentId)).size;$('#guardiansTable').innerHTML=data.guardians.length?`<table><thead><tr><th>Tutor</th><th>Alumno</th><th>Contacto</th><th>Acceso</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${data.guardians.map(g=>`<tr><td><b>${esc(g.name)}</b><small>${esc(g.relationship)}</small></td><td>${esc(guardianStudentName(g))}</td><td>${esc(g.phone||'Sin teléfono')}<small>${esc(g.email||'')}</small></td><td><span class="guardian-access">${esc(g.pin)}</span></td><td><span class="status-pill">${esc(g.status)}</span></td><td><button data-toggle-guardian="${g.id}">${g.status==='Activo'?'Pausar':'Activar'}</button> <button data-delete-guardian="${g.id}">Eliminar</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">Todavía no hay tutores registrados.</div>'}
+function renderResourcesAdmin(){let rows=data.resources;if(resourceFilter!=='all')rows=rows.filter(r=>r.subject===resourceFilter);$('#resourcesAdminGrid').innerHTML=rows.length?rows.map(r=>`<article class="resource-admin-card"><div><span class="resource-tag">${esc(r.subject)}</span> <span class="resource-tag">${esc(r.type)}</span> <span class="resource-tag">${esc(r.level)}</span></div><h3>${esc(r.title)}</h3><p>${esc(r.description)}</p><div class="resource-admin-actions"><button data-delete-resource="${r.id}">Eliminar</button></div></article>`).join(''):'<div class="empty">No hay recursos.</div>'}
+function recipientName(m){if(m.recipientType==='all')return'Todos';if(m.recipientType==='student')return studentById(m.recipientId)?.name||'Alumno';return data.guardians.find(g=>g.id===Number(m.recipientId))?.name||'Tutor'}
+function updateMessageRecipients(){const type=$('#messageRecipientType')?.value||'student',sel=$('#messageRecipient');if(!sel)return;if(type==='student')sel.innerHTML=data.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');else if(type==='guardian')sel.innerHTML=data.guardians.map(g=>`<option value="${g.id}">${esc(g.name)} · ${esc(guardianStudentName(g))}</option>`).join('');else sel.innerHTML='<option value="all">Toda la comunidad</option>';sel.disabled=type==='all'}
+function renderMessagesAdmin(){$('#messageTotal').textContent=data.messages.length;$('#messageUnread').textContent=data.messages.filter(m=>!m.read).length;$('#messagesAdminList').innerHTML=data.messages.length?data.messages.map(m=>`<article class="message-admin-card ${m.read?'':'unread'}"><div class="message-avatar">💬</div><div><b>${esc(m.subject)}</b><p>${esc(m.body)}</p><small>Para: ${esc(recipientName(m))} · ${esc(m.date)} · ${esc(m.priority)}</small></div><div><button data-read-message="${m.id}">${m.read?'No leído':'Leído'}</button> <button data-delete-message="${m.id}">Eliminar</button></div></article>`).join(''):'<div class="empty">Todavía no hay mensajes.</div>'}
+$('#newGuardianBtn').onclick=()=>{populateFamilySelects();const f=$('#guardianForm');f.reset();f.elements.pin.value=String(Math.floor(1000+Math.random()*9000));$('#guardianDialog').showModal()};
+$('#guardianForm').onsubmit=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData(e.target));data.guardians.push({...fd,id:Date.now(),studentId:Number(fd.studentId),receiveReports:e.target.elements.receiveReports.checked});save();$('#guardianDialog').close();renderAll();toast('Tutor registrado.')};
+$('#guardiansTable').onclick=e=>{const t=e.target.closest('[data-toggle-guardian]'),d=e.target.closest('[data-delete-guardian]');if(t){const g=data.guardians.find(x=>x.id===Number(t.dataset.toggleGuardian));g.status=g.status==='Activo'?'Pausado':'Activo';save();renderAll()}if(d&&confirm('¿Eliminar este tutor?')){data.guardians=data.guardians.filter(x=>x.id!==Number(d.dataset.deleteGuardian));save();renderAll()}};
+$('#newResourceBtn').onclick=()=>{$('#resourceForm').reset();$('#resourceDialog').showModal()};$('#resourceForm').onsubmit=e=>{e.preventDefault();data.resources.unshift({...Object.fromEntries(new FormData(e.target)),id:Date.now()});save();$('#resourceDialog').close();renderAll();toast('Recurso agregado.')};$$('[data-resource-filter]').forEach(b=>b.onclick=()=>{resourceFilter=b.dataset.resourceFilter;$$('[data-resource-filter]').forEach(x=>x.classList.toggle('active',x===b));renderResourcesAdmin()});$('#resourcesAdminGrid').onclick=e=>{const d=e.target.closest('[data-delete-resource]');if(d&&confirm('¿Eliminar este recurso?')){data.resources=data.resources.filter(x=>x.id!==Number(d.dataset.deleteResource));save();renderAll()}};
+$('#newMessageBtn').onclick=()=>{$('#messageForm').reset();updateMessageRecipients();$('#messageDialog').showModal()};$('#messageRecipientType').onchange=updateMessageRecipients;$('#messageForm').onsubmit=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData(e.target));data.messages.unshift({...fd,id:Date.now(),recipientId:fd.recipientType==='all'?'all':Number(fd.recipientId),date:localDate(),read:false});save();$('#messageDialog').close();renderAll();toast('Mensaje enviado.')};$('#messagesAdminList').onclick=e=>{const rb=e.target.closest('[data-read-message]'),d=e.target.closest('[data-delete-message]');if(rb){const m=data.messages.find(x=>x.id===Number(rb.dataset.readMessage));m.read=!m.read;save();renderAll()}if(d&&confirm('¿Eliminar este mensaje?')){data.messages=data.messages.filter(x=>x.id!==Number(d.dataset.deleteMessage));save();renderAll()}};
+
 let notificationFilter='all';
 function packageRemaining(pkg){return Math.max(0,Number(pkg.total||0)-Number(pkg.used||0))}
 function renderPackages(){
@@ -533,6 +552,6 @@ $('#certificatesGrid').onclick=e=>{
  if(del&&confirm('¿Eliminar este certificado?')){data.certificates=data.certificates.filter(x=>x.id!==Number(del.dataset.deleteCertificate));save();renderAll();toast('Certificado eliminado.','info')}
 };
 $$('[data-close]').forEach(b=>b.onclick=()=>$('#'+b.dataset.close).close());
-function renderAll(){renderDashboard();renderStudents();renderClasses();renderPayments();renderPackages();renderNotifications();renderCertificates();renderReports();renderAthenaHistory();athenaSnapshot();populateHorizonSelects();applySettings()}
+function renderAll(){renderDashboard();renderStudents();renderClasses();renderPayments();renderGuardians();renderResourcesAdmin();renderMessagesAdmin();renderPackages();renderNotifications();renderCertificates();renderReports();renderAthenaHistory();athenaSnapshot();populateHorizonSelects();populateFamilySelects();applySettings()}
 save();generateNotifications();
 renderAll();

@@ -1,6 +1,6 @@
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const KEY='rai_horizonte_v100',OLD_KEY='rai_galileo_v095';
+const KEY='rai_horizonte_v110',OLD_KEY='rai_horizonte_v100';
 let data=JSON.parse(localStorage.getItem(KEY)||'null')||JSON.parse(localStorage.getItem(OLD_KEY)||'null');
 let current=null;
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -8,7 +8,7 @@ const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',ma
 setTimeout(()=>$('#portalSplash').classList.add('hide'),1400);setTimeout(()=>$('#portalSplash').remove(),2100);
 if(!data){$('#loginError').textContent='Abre primero el Panel Galileo para inicializar la plataforma.'}
 else{
- data.packages=data.packages||[];data.certificates=data.certificates||[];data.portalUsers=data.portalUsers||[];
+ data.packages=data.packages||[];data.certificates=data.certificates||[];data.portalUsers=data.portalUsers||[];data.resources=data.resources||[];data.messages=data.messages||[];
  data.students.forEach(s=>{if(!data.portalUsers.some(u=>u.studentId===s.id))data.portalUsers.push({studentId:s.id,pin:String(1000+(Number(s.id)%9000)),active:true})});
  localStorage.setItem(KEY,JSON.stringify(data));
  $('#loginStudent').innerHTML=data.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
@@ -37,8 +37,9 @@ function renderAll(){
  $('#payments-page').innerHTML=`<div class="portal-grid"><article class="card metric"><span>Saldo pendiente</span><b>${money(pending)}</b></article><article class="card metric"><span>Sesiones restantes</span><b>${pkg?packageRem(pkg):0}</b></article><article class="card wide"><h3>Historial de pagos</h3><div class="list">${payments.map(p=>`<div class="list-item"><span><b>${esc(p.concept)}</b><small>${esc(p.date)} · ${esc(p.method||'')}</small></span><span><b>${money(p.amount)}</b><small>${esc(p.status)}</small></span></div>`).join('')||'<div class="empty">Sin movimientos registrados.</div>'}</div></article></div>`;
  const badges=[['🚀','Primer avance',current.progress>=20],['⭐','Mitad del camino',current.progress>=50],['🏆','Meta destacada',current.progress>=80],['📚','Tareas constantes',t.done>=3],['🎯','Asistencia ejemplar',a>=90],['📜','Certificado obtenido',certs.length>0]];
  $('#achievements-page').innerHTML=`<div class="card"><h3>Insignias</h3><div class="badge-grid">${badges.map(b=>`<article class="badge ${b[2]?'':'locked'}"><div class="icon">${b[0]}</div><b>${b[1]}</b><p>${b[2]?'Desbloqueada':'Aún bloqueada'}</p></article>`).join('')}</div></div><div class="card" style="margin-top:16px"><h3>Mis certificados</h3><div class="list">${certs.map(c=>`<div class="list-item"><span><b>${esc(c.title)}</b><small>${esc(c.type)} · ${esc(c.subject||'')}</small></span><span>${esc(c.date)}</span></div>`).join('')||'<div class="empty">Todavía no tienes certificados.</div>'}</div></div>`;
+ const resources=data.resources.filter(r=>r.level==='Todos'||r.level===current.level||!current.level);$('#resources-page').innerHTML=`<div class="card"><h3>Biblioteca de recursos</h3><div class="badge-grid">${resources.map(r=>`<article class="badge" style="text-align:left"><span class="status">${esc(r.subject)}</span><h3>${esc(r.title)}</h3><p>${esc(r.description)}</p><small>${esc(r.type)} · ${esc(r.level)}</small>${r.url?`<p><a href="${esc(r.url)}" target="_blank">Abrir recurso</a></p>`:''}</article>`).join('')||'<div class="empty">No hay recursos disponibles.</div>'}</div></div>`; const sm=data.messages.filter(m=>m.recipientType==='all'||(m.recipientType==='student'&&Number(m.recipientId)===current.id));$('#messages-page').innerHTML=`<div class="card"><h3>Mensajes recibidos</h3><div class="list">${sm.map(m=>`<div class="list-item"><span><b>${esc(m.subject)}</b><small>${esc(m.body)}</small></span><span>${esc(m.date)}<small>${esc(m.priority)}</small></span></div>`).join('')||'<div class="empty">No tienes mensajes.</div>'}</div></div>`;
 }
-const titles={home:'Inicio',classes:'Mis clases',academic:'Mi progreso',tasks:'Tareas',payments:'Pagos y paquete',achievements:'Logros'};
+const titles={home:'Inicio',classes:'Mis clases',academic:'Mi progreso',tasks:'Tareas',payments:'Pagos y paquete',achievements:'Logros',resources:'Recursos',messages:'Mensajes'};
 $$('[data-page]').forEach(b=>b.onclick=()=>{$$('.portal-page').forEach(p=>p.classList.remove('active'));$('#'+b.dataset.page+'-page').classList.add('active');$$('[data-page]').forEach(x=>x.classList.toggle('active',x===b));$('#portalTitle').textContent=titles[b.dataset.page];$('.portal-sidebar').classList.remove('open')});
 $('#portalMenu').onclick=()=>$('.portal-sidebar').classList.toggle('open');
 $('#logoutBtn').onclick=()=>{sessionStorage.removeItem('horizonte_student');location.reload()};
