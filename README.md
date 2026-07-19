@@ -48,7 +48,7 @@ Abre `admin.html` o pulsa `Panel Galileo` desde la página principal.
 Esta versión es un prototipo local. Los datos se guardan únicamente en el navegador y no cuentan todavía con autenticación ni base de datos en línea.
 
 
-## Proyecto Galileo v1.1.0
+## Proyecto Galileo v1.2.0
 - Precios públicos sencillos para primaria y secundaria.
 - Primera clase gratis destacada.
 - Expediente académico individual.
@@ -56,7 +56,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Indicadores de progreso por alumno.
 
 
-## Proyecto Galileo v1.1.0
+## Proyecto Galileo v1.2.0
 
 ### Calendario visual
 - Vista mensual de lunes a domingo.
@@ -79,7 +79,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Opción “Otro” para registrar conceptos personalizados.
 
 
-### Correcciones v1.1.0
+### Correcciones v1.2.0
 - Las modalidades de 1 hora ya aparecen en la página pública.
 - La sección de precios usa dos tarjetas compactas para comparar Primaria y Secundaria en celulares.
 - Se muestra el ahorro de cada paquete.
@@ -88,7 +88,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - El precio público y el panel administrativo están sincronizados.
 
 
-## Proyecto Galileo v1.1.0 — Centro financiero
+## Proyecto Galileo v1.2.0 — Centro financiero
 
 ### Funciones nuevas
 - Panel mensual de ingresos cobrados.
@@ -116,7 +116,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Secundaria 4 × 1 h 30 min: $550.
 
 
-## v1.1.0 — Atenea Inteligente
+## v1.2.0 — Atenea Inteligente
 - Consultas por nombre de alumno.
 - Resumen individual de progreso, asistencia, tareas, evaluaciones y pagos.
 - Clases de hoy, mañana y próximos siete días.
@@ -130,7 +130,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Funcionamiento completamente local y sin conexión.
 
 
-## v1.1.0 — Pulido y preparación para lanzamiento
+## v1.2.0 — Pulido y preparación para lanzamiento
 - Configuración del nombre de la institución y del profesor.
 - Datos de contacto y horario de atención.
 - Copia de seguridad completa en JSON.
@@ -144,7 +144,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Migración automática desde v0.9.4.
 
 
-## v1.1.0 — Estabilidad y animaciones
+## v1.2.0 — Estabilidad y animaciones
 - Pantalla de entrada visible y garantizada en la página principal.
 - Duración mínima de la introducción para evitar que desaparezca por una carga rápida.
 - Entrada independiente del logo, texto, navegación y portada.
@@ -156,7 +156,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Sistema de respaldo para cerrar la pantalla de carga aunque falle un recurso externo.
 
 
-# v1.1.0 — Proyecto Horizonte
+# v1.2.0 — Proyecto Horizonte
 
 Primera versión estable de la plataforma.
 
@@ -187,9 +187,32 @@ El PIN inicial de cada alumno se genera con cuatro dígitos a partir de su ident
 - Daniel R.: 1002
 - Emiliano G.: 1003
 
-# v1.1.0 — Horizonte Familiar
+# v1.2.0 — Horizonte Familiar
 - Portal para padres y tutores con PIN.
 - Consulta de progreso, asistencia, clases, pagos y mensajes.
 - Biblioteca de recursos por materia, nivel y tipo.
 - Mensajes para alumnos, tutores o toda la comunidad.
 - Migración automática desde v1.0.0.
+
+
+# v1.2.0 — Horizonte Docente
+
+## Gestión de profesores
+- Registro de profesores con materia, contacto y disponibilidad.
+- Acceso mediante PIN de cuatro dígitos.
+- Asignación de varios alumnos a cada profesor.
+- Activación, pausa y eliminación de accesos docentes.
+- Resumen de profesores activos, alumnos y clases asignadas.
+
+## Portal docente
+- Resumen personal del profesor.
+- Consulta de alumnos asignados.
+- Agenda de clases.
+- Seguimiento de progreso, asistencia y promedio.
+- Biblioteca de recursos relacionada con su materia.
+- Diseño adaptable a celular y computadora.
+
+## Migración
+- Conserva automáticamente la información de v1.1.0.
+- Añade el nuevo almacenamiento `rai_horizonte_v120`.
+- Sigue funcionando localmente sin servidor.

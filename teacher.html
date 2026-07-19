@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portal docente · Rumbo a Ingeniería</title>
+<link rel="icon" href="favicon.png"><link rel="stylesheet" href="teacher.css">
+</head>
+<body>
+<div id="teacherSplash" class="teacher-splash"><img src="favicon.png" alt=""><strong>Horizonte Docente</strong><span>Portal del profesor · v1.2.0</span></div>
+<section id="teacherLogin" class="teacher-login">
+ <div class="teacher-login-card">
+  <a href="index.html">← Página principal</a>
+  <img src="logo-oficial.png" alt="Rumbo a Ingeniería">
+  <p class="eyebrow">Horizonte Docente</p><h1>Portal del profesor</h1>
+  <p>Consulta alumnos, clases, tareas y seguimiento académico.</p>
+  <form id="teacherLoginForm">
+   <label>Profesor<select id="teacherSelect" required></select></label>
+   <label>PIN<input id="teacherPin" maxlength="4" inputmode="numeric" required></label>
+   <button>Entrar</button>
+  </form>
+  <div id="teacherError" class="error"></div>
+ </div>
+</section>
+<div id="teacherApp" class="teacher-app hidden">
+ <aside>
+  <img src="favicon.png" alt=""><strong id="teacherInstitution">Rumbo a Ingeniería</strong>
+  <nav>
+   <button class="active" data-teacher-page="summary">🏠 Resumen</button>
+   <button data-teacher-page="students">👨‍🎓 Mis alumnos</button>
+   <button data-teacher-page="schedule">📅 Mis clases</button>
+   <button data-teacher-page="followup">📊 Seguimiento</button>
+   <button data-teacher-page="resources">📚 Recursos</button>
+  </nav>
+  <button id="teacherLogout">Cerrar sesión</button>
+ </aside>
+ <main>
+  <header><button id="teacherMenu">☰</button><div><small>Portal docente</small><h2 id="teacherTitle">Resumen</h2></div><div class="teacher-chip"><span>🧑‍🏫</span><b id="teacherName"></b></div></header>
+  <section id="summary-teacher-page" class="teacher-page active"></section>
+  <section id="students-teacher-page" class="teacher-page"></section>
+  <section id="schedule-teacher-page" class="teacher-page"></section>
+  <section id="followup-teacher-page" class="teacher-page"></section>
+  <section id="resources-teacher-page" class="teacher-page"></section>
+ </main>
+</div>
+<script src="teacher.js"></script>
+</body></html>

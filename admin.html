@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#07182d">
-  <title>Panel Galileo | Rumbo a Ingeniería v1.1.0</title>
+  <title>Panel Galileo | Rumbo a Ingeniería v1.2.0</title>
   <link rel="icon" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,16 +16,17 @@
   <div class="admin-splash-orbit"></div>
   <img src="favicon.png" alt="">
   <strong>Panel Galileo</strong>
-  <span>Rumbo a Ingeniería · v1.1.0</span>
+  <span>Rumbo a Ingeniería · v1.2.0</span>
 </div>
 <div class="app-shell">
   <aside class="sidebar" id="sidebar">
-    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v1.1.0</small></span></a>
+    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v1.2.0</small></span></a>
     <nav>
       <button class="nav-item active" data-view="dashboard">⌂ <span>Resumen</span></button>
       <button class="nav-item" data-view="students">👨‍🎓 <span>Alumnos</span></button>
       <button class="nav-item" data-view="classes">📅 <span>Clases</span></button>
       <button class="nav-item" data-view="payments">💰 <span>Finanzas</span></button>
+      <button class="nav-item" data-view="teachers"><span>🧑‍🏫</span> Profesores</button>
       <button class="nav-item" data-view="families"><span>👨‍👩‍👧</span> Familias</button>
       <button class="nav-item" data-view="resources"><span>📚</span> Recursos</button>
       <button class="nav-item" data-view="messages"><span>💬</span> Mensajes</button>
@@ -36,7 +37,7 @@
       <button class="nav-item" data-view="athena">🤖 <span>Atenea</span></button>
     </nav>
     <div class="sidebar-bottom">
-      <a href="portal.html" class="icon-btn portal-link" title="Portal del alumno">🎓</a><a href="parent.html" class="icon-btn portal-link" title="Portal para padres">👨‍👩‍👧</a><button id="themeToggle">☀ Cambiar tema</button>
+      <a href="portal.html" class="icon-btn portal-link" title="Portal del alumno">🎓</a><a href="parent.html" class="icon-btn portal-link" title="Portal para padres">👨‍👩‍👧</a><a href="teacher.html" class="icon-btn portal-link" title="Portal docente">🧑‍🏫</a><button id="themeToggle">☀ Cambiar tema</button>
       <a href="index.html">← Volver al sitio</a>
     </div>
   </aside>
@@ -195,6 +196,20 @@
 
     
     
+    
+    <section class="view" id="teachers-view">
+      <div class="section-toolbar">
+        <div><p class="eyebrow">Equipo académico</p><h2>Profesores</h2></div>
+        <button id="newTeacherBtn" class="primary">+ Registrar profesor</button>
+      </div>
+      <div class="metrics-grid horizon-metrics">
+        <article class="metric-card"><span>Profesores activos</span><b id="teacherActive">0</b></article>
+        <article class="metric-card"><span>Alumnos asignados</span><b id="teacherStudents">0</b></article>
+        <article class="metric-card"><span>Clases asignadas</span><b id="teacherClasses">0</b></article>
+      </div>
+      <div class="panel"><div id="teachersTable" class="table-wrap"></div></div>
+    </section>
+
     <section class="view" id="families-view"><div class="section-toolbar"><div><p class="eyebrow">Acompañamiento familiar</p><h2>Padres y tutores</h2></div><button id="newGuardianBtn" class="primary">+ Registrar tutor</button></div><div class="metrics-grid horizon-metrics"><article class="metric-card"><span>Tutores registrados</span><b id="guardianCount">0</b></article><article class="metric-card"><span>Accesos activos</span><b id="guardianActive">0</b></article><article class="metric-card"><span>Alumnos vinculados</span><b id="guardianStudents">0</b></article></div><div class="panel"><div id="guardiansTable" class="table-wrap"></div></div></section>
     <section class="view" id="resources-view"><div class="section-toolbar"><div><p class="eyebrow">Biblioteca académica</p><h2>Recursos para alumnos</h2></div><button id="newResourceBtn" class="primary">+ Agregar recurso</button></div><div class="resource-admin-filters"><button class="active" data-resource-filter="all">Todos</button><button data-resource-filter="Matemáticas">Matemáticas</button><button data-resource-filter="Física">Física</button><button data-resource-filter="Inglés">Inglés</button></div><div id="resourcesAdminGrid" class="resource-admin-grid"></div></section>
     <section class="view" id="messages-view"><div class="section-toolbar"><div><p class="eyebrow">Comunicación interna</p><h2>Mensajes</h2></div><button id="newMessageBtn" class="primary">+ Nuevo mensaje</button></div><div class="message-summary"><span><b id="messageTotal">0</b> mensajes</span><span><b id="messageUnread">0</b> pendientes de lectura</span></div><div id="messagesAdminList" class="message-admin-list"></div></section>
@@ -248,7 +263,7 @@
       <div class="athena-smart">
         <aside class="athena-side panel">
           <img src="atenea.jpg" alt="Atenea" class="athena-smart-img">
-          <p class="eyebrow">Atenea Inteligente · v1.1.0</p>
+          <p class="eyebrow">Atenea Inteligente · v1.2.0</p>
           <h2>Asistente administrativa</h2>
           <p class="athena-description">Analiza alumnos, clases, progreso y finanzas usando la información guardada en Galileo.</p>
           <div id="athenaSnapshot" class="athena-snapshot"></div>
@@ -355,6 +370,24 @@
 <script src="admin.js"></script>
 
 
+
+
+<dialog id="teacherDialog">
+  <form id="teacherForm">
+    <div class="dialog-head"><h2>Registrar profesor</h2><button type="button" data-close="teacherDialog">×</button></div>
+    <div class="form-grid">
+      <label>Nombre completo<input name="name" required></label>
+      <label>Materia principal<select name="subject"><option>Matemáticas</option><option>Física</option><option>Inglés</option><option>Multidisciplinario</option></select></label>
+      <label>Teléfono<input name="phone" inputmode="tel"></label>
+      <label>Correo<input name="email" type="email"></label>
+      <label>PIN de acceso<input name="pin" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" required></label>
+      <label>Estado<select name="status"><option>Activo</option><option>Pausado</option></select></label>
+    </div>
+    <label>Disponibilidad semanal<textarea name="availability" rows="3" placeholder="Lunes a viernes, 5:00–9:00 pm"></textarea></label>
+    <label>Alumnos asignados<select id="teacherStudentsSelect" name="studentIds" multiple size="5"></select></label>
+    <div class="dialog-actions"><button type="button" data-close="teacherDialog">Cancelar</button><button class="primary">Guardar profesor</button></div>
+  </form>
+</dialog>
 
 <dialog id="guardianDialog"><form id="guardianForm"><div class="dialog-head"><h2>Registrar padre o tutor</h2><button type="button" data-close="guardianDialog">×</button></div><label>Alumno<select name="studentId" id="guardianStudent" required></select></label><div class="form-grid"><label>Nombre del tutor<input name="name" required></label><label>Parentesco<select name="relationship"><option>Madre</option><option>Padre</option><option>Tutor legal</option><option>Otro familiar</option></select></label><label>Teléfono<input name="phone" inputmode="tel"></label><label>Correo<input name="email" type="email"></label><label>PIN de acceso<input name="pin" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" required></label><label>Estado<select name="status"><option>Activo</option><option>Pausado</option></select></label></div><label class="check-row"><input name="receiveReports" type="checkbox" checked> Recibir reportes académicos</label><div class="dialog-actions"><button type="button" data-close="guardianDialog">Cancelar</button><button class="primary">Guardar tutor</button></div></form></dialog>
 <dialog id="resourceDialog"><form id="resourceForm"><div class="dialog-head"><h2>Agregar recurso</h2><button type="button" data-close="resourceDialog">×</button></div><div class="form-grid"><label>Título<input name="title" required></label><label>Materia<select name="subject"><option>Matemáticas</option><option>Física</option><option>Inglés</option><option>General</option></select></label><label>Tipo<select name="type"><option>Guía</option><option>Ejercicio</option><option>Video</option><option>Enlace</option><option>Lectura</option></select></label><label>Nivel<select name="level"><option>Primaria</option><option>Secundaria</option><option>Todos</option></select></label></div><label>Descripción<textarea name="description" rows="3" required></textarea></label><label>Enlace o referencia<input name="url" placeholder="https://..."></label><div class="dialog-actions"><button type="button" data-close="resourceDialog">Cancelar</button><button class="primary">Guardar recurso</button></div></form></dialog>

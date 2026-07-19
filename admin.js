@@ -18,8 +18,8 @@ setTimeout(()=>{
  }
 },3800);
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const KEY='rai_horizonte_v110';
-const OLD_KEY='rai_horizonte_v100';
+const KEY='rai_horizonte_v120';
+const OLD_KEY='rai_horizonte_v110';
 const seed={
  students:[
   {id:1,name:'Valeria M.',age:13,grade:'2° secundaria',subject:'Matemáticas',progress:68,goal:'Mejorar álgebra',notes:'Avanza bien con ejemplos visuales.'},
@@ -48,6 +48,7 @@ data.packages=Array.isArray(data.packages)?data.packages:[];
 data.notifications=Array.isArray(data.notifications)?data.notifications:[];
 data.certificates=Array.isArray(data.certificates)?data.certificates:[];
 data.portalUsers=Array.isArray(data.portalUsers)?data.portalUsers:[];
+data.teachers=Array.isArray(data.teachers)?data.teachers:[];
 data.guardians=Array.isArray(data.guardians)?data.guardians:[];
 data.resources=Array.isArray(data.resources)?data.resources:[{id:101,title:'Guía de fracciones',subject:'Matemáticas',type:'Guía',level:'Primaria',description:'Repaso de operaciones con fracciones.',url:''},{id:102,title:'Leyes de Newton',subject:'Física',type:'Lectura',level:'Secundaria',description:'Resumen con ejemplos cotidianos.',url:''},{id:103,title:'Daily English Practice',subject:'Inglés',type:'Ejercicio',level:'Todos',description:'Práctica corta de vocabulario y conversación.',url:''}];
 data.messages=Array.isArray(data.messages)?data.messages:[];
@@ -78,7 +79,7 @@ function navigate(view){
  $$('.view').forEach(v=>v.classList.remove('active'));
  $(`#${view}-view`).classList.add('active');
  $$('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
- const titles={dashboard:'Resumen general',students:'Administración de alumnos',classes:'Agenda de clases',payments:'Centro financiero',families:'Padres y tutores',resources:'Biblioteca de recursos',messages:'Mensajes',packages:'Paquetes de clases',notifications:'Centro de notificaciones',certificates:'Certificados y diplomas',reports:'Reportes',athena:'Atenea Administrativa'};
+ const titles={dashboard:'Resumen general',students:'Administración de alumnos',classes:'Agenda de clases',payments:'Centro financiero',teachers:'Profesores',families:'Padres y tutores',resources:'Biblioteca de recursos',messages:'Mensajes',packages:'Paquetes de clases',notifications:'Centro de notificaciones',certificates:'Certificados y diplomas',reports:'Reportes',athena:'Atenea Administrativa'};
  $('#viewTitle').textContent=titles[view];
  $('#sidebar').classList.remove('open');
  renderAll();
@@ -466,6 +467,40 @@ $('#resetDataBtn').onclick=()=>{
 };
 
 
+
+function teacherStudentNames(t){
+ return (t.studentIds||[]).map(id=>studentById(id)?.name).filter(Boolean);
+}
+function populateTeacherStudents(){
+ const select=$('#teacherStudentsSelect');
+ if(select)select.innerHTML=data.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+}
+function renderTeachers(){
+ const active=data.teachers.filter(t=>t.status==='Activo');
+ const assigned=new Set(data.teachers.flatMap(t=>t.studentIds||[]));
+ const classCount=data.classes.filter(c=>data.teachers.some(t=>t.name===c.teacher)).length;
+ $('#teacherActive').textContent=active.length;
+ $('#teacherStudents').textContent=assigned.size;
+ $('#teacherClasses').textContent=classCount;
+ $('#teachersTable').innerHTML=data.teachers.length?`<table><thead><tr><th>Profesor</th><th>Materia</th><th>Alumnos</th><th>Disponibilidad</th><th>Acceso</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${data.teachers.map(t=>`<tr><td><b>${esc(t.name)}</b><small>${esc(t.email||t.phone||'Sin contacto')}</small></td><td><span class="teacher-subject">${esc(t.subject)}</span></td><td><div class="teacher-students">${teacherStudentNames(t).map(n=>`<span>${esc(n)}</span>`).join('')||'<small>Sin alumnos</small>'}</div></td><td>${esc(t.availability||'Sin horario')}</td><td><span class="teacher-pin">${esc(t.pin)}</span></td><td><span class="status-pill">${esc(t.status)}</span></td><td><button data-toggle-teacher="${t.id}">${t.status==='Activo'?'Pausar':'Activar'}</button> <button data-delete-teacher="${t.id}">Eliminar</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">Todavía no hay profesores registrados.</div>';
+}
+$('#newTeacherBtn').onclick=()=>{
+ const f=$('#teacherForm');f.reset();populateTeacherStudents();
+ f.elements.pin.value=String(Math.floor(1000+Math.random()*9000));
+ $('#teacherDialog').showModal();
+};
+$('#teacherForm').onsubmit=e=>{
+ e.preventDefault();
+ const fd=Object.fromEntries(new FormData(e.target));
+ const studentIds=[...$('#teacherStudentsSelect').selectedOptions].map(o=>Number(o.value));
+ data.teachers.push({...fd,id:Date.now(),studentIds});
+ save();$('#teacherDialog').close();renderAll();toast('Profesor registrado.');
+};
+$('#teachersTable').onclick=e=>{
+ const toggle=e.target.closest('[data-toggle-teacher]'),del=e.target.closest('[data-delete-teacher]');
+ if(toggle){const t=data.teachers.find(x=>x.id===Number(toggle.dataset.toggleTeacher));if(t){t.status=t.status==='Activo'?'Pausado':'Activo';save();renderAll();}}
+ if(del&&confirm('¿Eliminar este profesor?')){data.teachers=data.teachers.filter(x=>x.id!==Number(del.dataset.deleteTeacher));save();renderAll();toast('Profesor eliminado.','info')}
+};
 let resourceFilter='all';
 function studentById(id){return data.students.find(s=>s.id===Number(id))}
 function guardianStudentName(g){return studentById(g.studentId)?.name||'Alumno no encontrado'}
@@ -552,6 +587,6 @@ $('#certificatesGrid').onclick=e=>{
  if(del&&confirm('¿Eliminar este certificado?')){data.certificates=data.certificates.filter(x=>x.id!==Number(del.dataset.deleteCertificate));save();renderAll();toast('Certificado eliminado.','info')}
 };
 $$('[data-close]').forEach(b=>b.onclick=()=>$('#'+b.dataset.close).close());
-function renderAll(){renderDashboard();renderStudents();renderClasses();renderPayments();renderGuardians();renderResourcesAdmin();renderMessagesAdmin();renderPackages();renderNotifications();renderCertificates();renderReports();renderAthenaHistory();athenaSnapshot();populateHorizonSelects();populateFamilySelects();applySettings()}
+function renderAll(){renderDashboard();renderStudents();renderClasses();renderPayments();renderTeachers();renderGuardians();renderResourcesAdmin();renderMessagesAdmin();renderPackages();renderNotifications();renderCertificates();renderReports();renderAthenaHistory();athenaSnapshot();populateHorizonSelects();populateFamilySelects();populateTeacherStudents();applySettings()}
 save();generateNotifications();
 renderAll();
