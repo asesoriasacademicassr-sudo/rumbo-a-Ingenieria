@@ -48,7 +48,7 @@ Abre `admin.html` o pulsa `Panel Galileo` desde la página principal.
 Esta versión es un prototipo local. Los datos se guardan únicamente en el navegador y no cuentan todavía con autenticación ni base de datos en línea.
 
 
-## Proyecto Galileo v0.9.3
+## Proyecto Galileo v0.9.5
 - Precios públicos sencillos para primaria y secundaria.
 - Primera clase gratis destacada.
 - Expediente académico individual.
@@ -56,7 +56,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Indicadores de progreso por alumno.
 
 
-## Proyecto Galileo v0.9.3
+## Proyecto Galileo v0.9.5
 
 ### Calendario visual
 - Vista mensual de lunes a domingo.
@@ -79,7 +79,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Opción “Otro” para registrar conceptos personalizados.
 
 
-### Correcciones v0.9.3
+### Correcciones v0.9.5
 - Las modalidades de 1 hora ya aparecen en la página pública.
 - La sección de precios usa dos tarjetas compactas para comparar Primaria y Secundaria en celulares.
 - Se muestra el ahorro de cada paquete.
@@ -88,7 +88,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - El precio público y el panel administrativo están sincronizados.
 
 
-## Proyecto Galileo v0.9.3 — Centro financiero
+## Proyecto Galileo v0.9.5 — Centro financiero
 
 ### Funciones nuevas
 - Panel mensual de ingresos cobrados.
@@ -114,3 +114,31 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Secundaria 1 h 30 min: $150.
 - Secundaria 4 × 1 hora: $450.
 - Secundaria 4 × 1 h 30 min: $550.
+
+
+## v0.9.5 — Atenea Inteligente
+- Consultas por nombre de alumno.
+- Resumen individual de progreso, asistencia, tareas, evaluaciones y pagos.
+- Clases de hoy, mañana y próximos siete días.
+- Lista detallada de pagos pendientes.
+- Resumen mensual de ingresos, egresos, utilidad y cuentas por cobrar.
+- Detección de alumnos que requieren atención.
+- Resumen general de la plataforma.
+- Preguntas sugeridas.
+- Historial persistente de conversación.
+- Panel rápido de indicadores para Atenea.
+- Funcionamiento completamente local y sin conexión.
+
+
+## v0.9.5 — Pulido y preparación para lanzamiento
+- Configuración del nombre de la institución y del profesor.
+- Datos de contacto y horario de atención.
+- Copia de seguridad completa en JSON.
+- Restauración segura de respaldos.
+- Reinicio protegido mediante doble confirmación.
+- Prevención de alumnos duplicados.
+- Prevención de clases duplicadas en la misma fecha y hora.
+- Notificaciones visuales al guardar, restaurar o detectar errores.
+- Mejoras de accesibilidad para teclado.
+- Diseño responsive adicional en configuración y mensajes.
+- Migración automática desde v0.9.4.

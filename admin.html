@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#07182d">
-  <title>Panel Galileo | Rumbo a Ingeniería v0.9.3</title>
+  <title>Panel Galileo | Rumbo a Ingeniería v0.9.5</title>
   <link rel="icon" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 <body>
 <div class="app-shell">
   <aside class="sidebar" id="sidebar">
-    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v0.9.3</small></span></a>
+    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v0.9.5</small></span></a>
     <nav>
       <button class="nav-item active" data-view="dashboard">⌂ <span>Resumen</span></button>
       <button class="nav-item" data-view="students">👨‍🎓 <span>Alumnos</span></button>
@@ -190,10 +190,37 @@
       <article class="panel report-table"><h3>Resumen de alumnos</h3><div id="reportStudents"></div></article>
     </section>
 
+    
     <section class="view" id="athena-view">
-      <div class="athena-admin">
-        <div class="athena-visual"><img src="atenea.jpg" alt="Atenea"></div>
-        <div class="athena-content"><p class="eyebrow">Atenea Administrativa · Prototipo</p><h2>Consulta rápidamente el estado de la plataforma</h2><div id="athenaChat" class="chat"><p class="bot">Hola. Puedo mostrarte alumnos, clases, pagos pendientes y progreso general.</p></div><div class="quick-actions"><button>¿Cuántos alumnos hay?</button><button>¿Quién tiene clase próxima?</button><button>¿Cuánto falta por cobrar?</button><button>¿Cuál es el progreso promedio?</button></div><form id="athenaAdminForm"><input id="athenaAdminInput" placeholder="Escribe una pregunta administrativa..."><button>Enviar</button></form></div>
+      <div class="athena-smart">
+        <aside class="athena-side panel">
+          <img src="atenea.jpg" alt="Atenea" class="athena-smart-img">
+          <p class="eyebrow">Atenea Inteligente · v0.9.5</p>
+          <h2>Asistente administrativa</h2>
+          <p class="athena-description">Analiza alumnos, clases, progreso y finanzas usando la información guardada en Galileo.</p>
+          <div id="athenaSnapshot" class="athena-snapshot"></div>
+          <button id="clearAthenaHistory">Limpiar conversación</button>
+        </aside>
+        <section class="athena-workspace panel">
+          <div class="panel-head athena-heading">
+            <div><p class="eyebrow">Centro de consultas</p><h3>¿Qué necesitas revisar?</h3></div>
+            <span class="athena-online">● Lista para ayudarte</span>
+          </div>
+          <div id="athenaSuggestions" class="athena-suggestions">
+            <button data-question="¿Qué clases tengo hoy?">Clases de hoy</button>
+            <button data-question="¿Qué clases tengo mañana?">Clases de mañana</button>
+            <button data-question="¿Quién tiene pagos pendientes?">Pagos pendientes</button>
+            <button data-question="¿Cuánto gané este mes?">Utilidad mensual</button>
+            <button data-question="¿Qué alumnos necesitan atención?">Alumnos por atender</button>
+            <button data-question="Muéstrame el resumen general">Resumen general</button>
+          </div>
+          <div id="athenaChat" class="chat athena-smart-chat"></div>
+          <form id="athenaAdminForm" class="athena-composer">
+            <input id="athenaAdminInput" autocomplete="off" placeholder="Ej. Muéstrame el progreso de Valeria">
+            <button class="primary">Enviar</button>
+          </form>
+          <small class="athena-help">Puedes preguntar por un alumno usando su nombre, por clases de hoy o mañana, pagos, progreso, asistencia, tareas y finanzas.</small>
+        </section>
       </div>
     </section>
   </main>
@@ -273,5 +300,31 @@
 <dialog id="profileDialog" class="wide-dialog"><div id="profileContent"></div></dialog>
 <dialog id="academicRecordDialog"><form method="dialog" id="academicRecordForm"><h3 id="recordDialogTitle">Nuevo registro</h3><input type="hidden" name="studentId"><input type="hidden" name="recordType"><label>Título<input name="title" required></label><label>Fecha<input name="date" type="date" required></label><label id="recordValueLabel">Resultado<input name="value"></label><label>Descripción<textarea name="description" rows="4"></textarea></label><div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="saveAcademicRecord">Guardar</button></div></form></dialog>
 <script src="admin.js"></script>
+
+<dialog id="settingsDialog" class="settings-dialog">
+  <form method="dialog" id="settingsForm">
+    <div class="settings-head"><div><p class="eyebrow">Personalización</p><h2>Configuración de Galileo</h2></div><button value="cancel" class="icon-btn">×</button></div>
+    <div class="settings-grid">
+      <label>Nombre de la institución<input name="institution" required></label>
+      <label>Nombre del profesor<input name="teacher"></label>
+      <label>Teléfono<input name="phone"></label>
+      <label>Correo electrónico<input name="email" type="email"></label>
+      <label>Horario de atención<input name="hours" placeholder="Lunes a sábado, 5:00–9:00 pm"></label>
+      <label>Moneda<select name="currency"><option value="MXN">Peso mexicano (MXN)</option></select></label>
+    </div>
+    <section class="settings-security">
+      <h3>Seguridad de la información</h3>
+      <p>Descarga o restaura una copia de alumnos, clases, pagos, egresos y configuración.</p>
+      <div class="settings-actions">
+        <button type="button" id="backupBtn">Descargar respaldo</button>
+        <label class="file-button">Restaurar respaldo<input type="file" id="restoreInput" accept=".json,application/json"></label>
+        <button type="button" id="resetDataBtn" class="danger-btn">Reiniciar datos</button>
+      </div>
+    </section>
+    <div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="saveSettings">Guardar cambios</button></div>
+  </form>
+</dialog>
+<div id="toastRegion" class="toast-region" aria-live="polite"></div>
+
 </body>
 </html>

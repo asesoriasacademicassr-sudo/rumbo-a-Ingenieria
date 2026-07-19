@@ -1,7 +1,7 @@
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const KEY='rai_galileo_v093';
-const OLD_KEY='rai_galileo_v092';
+const KEY='rai_galileo_v095';
+const OLD_KEY='rai_galileo_v094';
 const seed={
  students:[
   {id:1,name:'Valeria M.',age:13,grade:'2° secundaria',subject:'Matemáticas',progress:68,goal:'Mejorar álgebra',notes:'Avanza bien con ejemplos visuales.'},
@@ -24,6 +24,8 @@ let previous=JSON.parse(localStorage.getItem(OLD_KEY)||'null');
 let data=JSON.parse(localStorage.getItem(KEY)||'null')||previous||seed;
 data.expenses=Array.isArray(data.expenses)?data.expenses:[];
 data.payments=(data.payments||[]).map(p=>({...p,method:p.method||'No registrado'}));
+data.athenaHistory=Array.isArray(data.athenaHistory)?data.athenaHistory:[];
+data.settings={institution:'Rumbo a Ingeniería',teacher:'',phone:'',email:'',hours:'Lunes a sábado, 5:00–9:00 pm',currency:'MXN',...(data.settings||{})};
 data.students=data.students.map(s=>({...s,attendance:s.attendance||[],tasks:s.tasks||[],grades:s.grades||[],history:s.history||[{id:Date.now()+Math.random(),date:new Date().toISOString().slice(0,10),title:'Perfil creado',description:'Alumno registrado en Proyecto Galileo.'}]}));
 let calendarCursor=new Date();
 calendarCursor.setDate(1);
@@ -31,6 +33,14 @@ let selectedCalendarDate=new Date().toISOString().slice(0,10);
 const MONTHS=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
 const save=()=>localStorage.setItem(KEY,JSON.stringify(data));
+function toast(message,type='success'){
+ const region=$('#toastRegion');if(!region)return;
+ const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=message;region.appendChild(el);
+ setTimeout(()=>el.remove(),3200);
+}
+function duplicateStudent(name,id=null){const n=normalizeText(name);return data.students.some(s=>normalizeText(s.name)===n&&s.id!==id)}
+function duplicateClass(fd){return data.classes.some(c=>c.student===fd.student&&c.date===fd.date&&c.time===fd.time&&c.status!=='Cancelada')}
+
 const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(n);
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 function navigate(view){
@@ -82,8 +92,8 @@ function updateStudentSelects(){
 $('#addStudentBtn').onclick=()=>{ $('#studentForm').reset(); $('#studentForm [name=id]').value=''; $('#studentDialog').showModal(); };
 window.editStudent=id=>{const s=data.students.find(x=>x.id===id);if(!s)return;for(const [k,v] of Object.entries(s)){const el=$(`#studentForm [name="${k}"]`);if(el)el.value=v}$('#studentDialog').showModal()};
 window.deleteStudent=id=>{if(confirm('¿Eliminar este alumno?')){data.students=data.students.filter(s=>s.id!==id);save();renderAll()}};
-$('#saveStudent').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#studentForm')));if(!fd.name)return;const existing=data.students.find(s=>s.id===Number(fd.id));
-const obj={...fd,id:fd.id?Number(fd.id):Date.now(),age:Number(fd.age),progress:Number(fd.progress),attendance:existing?.attendance||[],tasks:existing?.tasks||[],grades:existing?.grades||[],history:existing?.history||[{id:Date.now(),date:new Date().toISOString().slice(0,10),title:'Perfil creado',description:'Alumno registrado en Proyecto Galileo.'}]};const i=data.students.findIndex(s=>s.id===obj.id);i>=0?data.students[i]=obj:data.students.push(obj);save();$('#studentDialog').close();renderAll()};
+$('#saveStudent').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#studentForm')));if(!fd.name)return toast('Escribe el nombre del alumno.','error');const currentId=fd.id?Number(fd.id):null;if(duplicateStudent(fd.name,currentId))return toast('Ya existe un alumno con ese nombre.','error');const existing=data.students.find(s=>s.id===currentId);
+const obj={...fd,id:currentId||Date.now(),age:Number(fd.age),progress:Number(fd.progress),attendance:existing?.attendance||[],tasks:existing?.tasks||[],grades:existing?.grades||[],history:existing?.history||[{id:Date.now(),date:new Date().toISOString().slice(0,10),title:'Perfil creado',description:'Alumno registrado en Proyecto Galileo.'}]};const i=data.students.findIndex(s=>s.id===obj.id);i>=0?data.students[i]=obj:data.students.push(obj);save();$('#studentDialog').close();renderAll();toast(i>=0?'Alumno actualizado.':'Alumno registrado.')};
 
 
 function isoDate(y,m,d){return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`}
@@ -128,7 +138,7 @@ function renderClasses(){
  $('#classesTable').innerHTML=`<table><thead><tr><th>Alumno</th><th>Materia</th><th>Fecha</th><th>Hora</th><th>Duración</th><th>Tema</th><th>Estado</th><th></th></tr></thead><tbody>${data.classes.map(c=>`<tr><td>${esc(c.student)}</td><td>${esc(c.subject)}</td><td>${esc(c.date)}</td><td>${esc(c.time)}</td><td>${esc(c.duration)}</td><td>${esc(c.topic)}</td><td><span class="badge-status ${c.status==='Pendiente'?'pending':c.status==='Completada'?'completed':'cancelled'}">${esc(c.status)}</span></td><td><button onclick="deleteClass(${c.id})">Eliminar</button></td></tr>`).join('')}</tbody></table>`;
 }
 $('#addClassBtn').onclick=()=>{updateStudentSelects();$('#classForm').reset();$('#classForm [name=date]').value=selectedCalendarDate;$('#classDialog').showModal()};
-$('#saveClass').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#classForm')));if(!fd.student||!fd.date)return;data.classes.push({...fd,id:Date.now()});save();$('#classDialog').close();renderAll()};
+$('#saveClass').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#classForm')));if(!fd.student||!fd.date)return toast('Completa alumno y fecha.','error');if(duplicateClass(fd))return toast('Ya existe una clase para ese alumno en la misma fecha y hora.','error');data.classes.push({...fd,id:Date.now()});save();$('#classDialog').close();renderAll();toast('Clase programada.')};
 window.deleteClass=id=>{if(confirm('¿Eliminar esta clase?')){data.classes=data.classes.filter(c=>c.id!==id);save();renderAll()}};
 
 
@@ -220,11 +230,11 @@ function syncPaymentAmount(){
 }
 $('#paymentConcept').onchange=syncPaymentAmount;
 $('#addPaymentBtn').onclick=()=>{updateStudentSelects();$('#paymentForm').reset();$('#paymentForm [name=date]').value=new Date().toISOString().slice(0,10);syncPaymentAmount();$('#paymentDialog').showModal()};
-$('#savePayment').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#paymentForm')));if(!fd.student||!fd.concept)return;const automatic=PAYMENT_PRICES[fd.concept];data.payments.push({...fd,id:Date.now(),amount:automatic??Number(fd.amount),method:fd.method||'No registrado'});save();$('#paymentDialog').close();renderAll()};
+$('#savePayment').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#paymentForm')));if(!fd.student||!fd.concept)return;const automatic=PAYMENT_PRICES[fd.concept];data.payments.push({...fd,id:Date.now(),amount:automatic??Number(fd.amount),method:fd.method||'No registrado'});save();$('#paymentDialog').close();renderAll();toast('Ingreso registrado.')};
 window.togglePayment=id=>{const p=data.payments.find(x=>x.id===id);if(!p)return;p.status=p.status==='Completado'?'Pendiente':'Completado';save();renderAll()};
 window.deletePayment=id=>{if(confirm('¿Eliminar este ingreso?')){data.payments=data.payments.filter(p=>p.id!==id);save();renderAll()}};
 $('#addExpenseBtn').onclick=()=>{$('#expenseForm').reset();$('#expenseForm [name=date]').value=new Date().toISOString().slice(0,10);$('#expenseDialog').showModal()};
-$('#saveExpense').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#expenseForm')));if(!fd.concept||!Number(fd.amount))return;data.expenses.push({...fd,id:Date.now(),amount:Number(fd.amount)});save();$('#expenseDialog').close();renderAll()};
+$('#saveExpense').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#expenseForm')));if(!fd.concept||!Number(fd.amount))return;data.expenses.push({...fd,id:Date.now(),amount:Number(fd.amount)});save();$('#expenseDialog').close();renderAll();toast('Egreso registrado.')};
 window.deleteExpense=id=>{if(confirm('¿Eliminar este egreso?')){data.expenses=data.expenses.filter(x=>x.id!==id);save();renderAll()}};
 $('#financeMonth').value=new Date().toISOString().slice(0,7);
 $('#financeMonth').onchange=renderPayments;
@@ -249,18 +259,133 @@ function renderReports(){
 }
 $('#printReport').onclick=()=>window.print();
 
-function athenaAnswer(q){
- q=q.toLowerCase();
- if(q.includes('cuánt')&&q.includes('alumn'))return `Hay ${data.students.length} alumnos registrados.`;
- if(q.includes('clase')&&(q.includes('próxima')||q.includes('hoy')||q.includes('quién'))){const c=[...data.classes].filter(x=>x.status==='Pendiente').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time))[0];return c?`La próxima clase es de ${c.student}, ${c.subject}, el ${c.date} a las ${c.time}.`:'No hay clases pendientes.'}
- if(q.includes('cobrar')||q.includes('pago')){const n=data.payments.filter(p=>p.status==='Pendiente').reduce((a,p)=>a+Number(p.amount),0);return `Hay ${money(n)} pendientes por cobrar.`}
- if(q.includes('ganancia')||q.includes('utilidad')||q.includes('ingreso')||q.includes('egreso')){const month=new Date().toISOString().slice(0,7),f=financeData(month);return `Este mes hay ${money(f.income)} cobrados, ${money(f.expenseTotal)} en egresos y una utilidad de ${money(f.income-f.expenseTotal)}.`}
- if(q.includes('progreso')){const a=data.students.length?Math.round(data.students.reduce((x,s)=>x+s.progress,0)/data.students.length):0;return `El progreso promedio del grupo es ${a}%.`}
- return 'Puedo consultar alumnos, próximas clases, pagos pendientes y progreso promedio.';
+
+function normalizeText(value){return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
+function localDate(offset=0){const d=new Date();d.setDate(d.getDate()+offset);return d.toISOString().slice(0,10)}
+function dateLabel(date){
+ const [y,m,d]=String(date).split('-').map(Number);
+ return new Intl.DateTimeFormat('es-MX',{weekday:'long',day:'numeric',month:'long'}).format(new Date(y,m-1,d));
 }
-function sendAthena(q){if(!q.trim())return;$('#athenaChat').insertAdjacentHTML('beforeend',`<p class="user">${esc(q)}</p><p class="bot">${esc(athenaAnswer(q))}</p>`);$('#athenaChat').scrollTop=$('#athenaChat').scrollHeight}
-$('.quick-actions').onclick=e=>{if(e.target.tagName==='BUTTON')sendAthena(e.target.textContent)};
-$('#athenaAdminForm').onsubmit=e=>{e.preventDefault();const i=$('#athenaAdminInput');sendAthena(i.value);i.value=''};
+function findStudentInQuestion(q){
+ const nq=normalizeText(q);
+ return data.students.find(s=>{
+  const full=normalizeText(s.name), parts=full.split(/\s+/).filter(x=>x.length>2);
+  return nq.includes(full)||parts.some(x=>nq.includes(x));
+ });
+}
+function attendanceSummary(s){
+ const records=s.attendance||[],attended=records.filter(x=>normalizeText(x.value).includes('asisti')).length;
+ return {total:records.length,rate:records.length?Math.round(attended/records.length*100):null};
+}
+function taskSummary(s){
+ const records=s.tasks||[],completed=records.filter(x=>normalizeText(x.value).includes('complet')).length;
+ return {total:records.length,completed,pending:records.length-completed};
+}
+function gradeSummary(s){
+ const nums=(s.grades||[]).map(x=>Number(x.value)).filter(Number.isFinite);
+ return nums.length?(nums.reduce((a,b)=>a+b,0)/nums.length).toFixed(1):null;
+}
+function classesAnswer(date){
+ const rows=data.classes.filter(c=>c.date===date&&c.status!=='Cancelada').sort((a,b)=>a.time.localeCompare(b.time));
+ if(!rows.length)return `No hay clases programadas para ${dateLabel(date)}.`;
+ return `Clases para ${dateLabel(date)}:\n${rows.map(c=>`• ${c.time} — ${c.student}, ${c.subject}${c.topic?` (${c.topic})`:''}`).join('\n')}`;
+}
+function studentAttentionList(){
+ return data.students.map(s=>{
+  const a=attendanceSummary(s),t=taskSummary(s),reasons=[];
+  if(Number(s.progress)<50)reasons.push(`progreso de ${s.progress}%`);
+  if(a.rate!==null&&a.rate<75)reasons.push(`asistencia de ${a.rate}%`);
+  if(t.pending>=2)reasons.push(`${t.pending} tareas pendientes`);
+  return {s,reasons};
+ }).filter(x=>x.reasons.length).sort((a,b)=>b.reasons.length-a.reasons.length);
+}
+function athenaSnapshot(){
+ const month=new Date().toISOString().slice(0,7),f=financeData(month);
+ const today=data.classes.filter(c=>c.date===localDate()&&c.status!=='Cancelada').length;
+ const attention=studentAttentionList().length;
+ const el=$('#athenaSnapshot');if(!el)return;
+ el.innerHTML=`<div class="athena-mini"><span>Clases hoy</span><b>${today}</b></div><div class="athena-mini"><span>Por cobrar</span><b>${money(f.pendingTotal)}</b></div><div class="athena-mini"><span>Utilidad mes</span><b>${money(f.income-f.expenseTotal)}</b></div><div class="athena-mini"><span>Por atender</span><b>${attention}</b></div>`;
+}
+function athenaAnswer(question){
+ const q=normalizeText(question),student=findStudentInQuestion(question);
+ if(student){
+  const a=attendanceSummary(student),t=taskSummary(student),g=gradeSummary(student);
+  const pending=data.payments.filter(p=>p.student===student.name&&p.status==='Pendiente').reduce((sum,p)=>sum+Number(p.amount),0);
+  const next=data.classes.filter(c=>c.student===student.name&&c.status==='Pendiente'&&c.date>=localDate()).sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time))[0];
+  if(q.includes('pago')||q.includes('debe')||q.includes('cobrar'))return pending?`${student.name} tiene ${money(pending)} pendiente por pagar.`:`${student.name} no tiene pagos pendientes.`;
+  if(q.includes('clase')||q.includes('proxima'))return next?`La próxima clase de ${student.name} es el ${dateLabel(next.date)} a las ${next.time}, de ${next.subject}${next.topic?`, tema: ${next.topic}`:''}.`:`${student.name} no tiene clases pendientes.`;
+  return `Resumen de ${student.name}:
+• Materia: ${student.subject}
+• Grado: ${student.grade}
+• Progreso: ${student.progress}%
+• Asistencia: ${a.rate===null?'sin registros':a.rate+'%'}
+• Tareas: ${t.completed} completadas y ${t.pending} pendientes
+• Promedio: ${g===null?'sin evaluaciones':g}
+• Pago pendiente: ${money(pending)}
+• Objetivo: ${student.goal||'sin definir'}`;
+ }
+ if(q.includes('hoy')&&q.includes('clase'))return classesAnswer(localDate());
+ if(q.includes('manana')&&q.includes('clase'))return classesAnswer(localDate(1));
+ if((q.includes('semana')||q.includes('proximas'))&&q.includes('clase')){
+  const end=localDate(7),rows=data.classes.filter(c=>c.date>=localDate()&&c.date<=end&&c.status==='Pendiente').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  return rows.length?`Próximas clases:\n${rows.map(c=>`• ${c.date} ${c.time} — ${c.student}, ${c.subject}`).join('\n')}`:'No hay clases pendientes durante los próximos siete días.';
+ }
+ if(q.includes('pendiente')&&(q.includes('pago')||q.includes('quien'))||q.includes('cobrar')){
+  const rows=data.payments.filter(p=>p.status==='Pendiente');
+  return rows.length?`Pagos pendientes (${money(rows.reduce((a,p)=>a+Number(p.amount),0))}):\n${rows.map(p=>`• ${p.student}: ${money(p.amount)} — ${p.concept}`).join('\n')}`:'No hay pagos pendientes.';
+ }
+ if(q.includes('ganancia')||q.includes('utilidad')||q.includes('ingreso')||q.includes('egreso')){
+  const month=new Date().toISOString().slice(0,7),f=financeData(month);
+  return `Finanzas del mes:
+• Ingresos cobrados: ${money(f.income)}
+• Egresos: ${money(f.expenseTotal)}
+• Utilidad neta: ${money(f.income-f.expenseTotal)}
+• Por cobrar: ${money(f.pendingTotal)}`;
+ }
+ if(q.includes('atencion')||q.includes('prioridad')||q.includes('necesitan')){
+  const rows=studentAttentionList();
+  return rows.length?`Alumnos que conviene revisar:\n${rows.map(x=>`• ${x.s.name}: ${x.reasons.join(', ')}`).join('\n')}`:'No detecté alumnos con alertas académicas importantes.';
+ }
+ if(q.includes('progreso')){
+  const avg=data.students.length?Math.round(data.students.reduce((a,s)=>a+Number(s.progress),0)/data.students.length):0;
+  return `El progreso promedio es ${avg}%. El alumno con mayor avance es ${[...data.students].sort((a,b)=>b.progress-a.progress)[0]?.name||'ninguno'}.`;
+ }
+ if(q.includes('resumen')||q.includes('general')){
+  const month=new Date().toISOString().slice(0,7),f=financeData(month);
+  return `Resumen general:
+• Alumnos activos: ${data.students.length}
+• Clases pendientes: ${data.classes.filter(c=>c.status==='Pendiente').length}
+• Clases hoy: ${data.classes.filter(c=>c.date===localDate()&&c.status!=='Cancelada').length}
+• Pagos por cobrar: ${money(f.pendingTotal)}
+• Utilidad del mes: ${money(f.income-f.expenseTotal)}
+• Alumnos por atender: ${studentAttentionList().length}`;
+ }
+ return `No identifiqué exactamente la consulta. Prueba con:
+• “¿Qué clases tengo mañana?”
+• “Muéstrame el progreso de [nombre]”
+• “¿Quién tiene pagos pendientes?”
+• “¿Cuánto gané este mes?”
+• “¿Qué alumnos necesitan atención?”`;
+}
+function renderAthenaHistory(){
+ const chat=$('#athenaChat');if(!chat)return;
+ if(!data.athenaHistory.length){
+  chat.innerHTML=`<div class="athena-message bot"><div class="athena-bubble"><strong>Hola, soy Atenea.</strong>\nPuedo analizar alumnos, clases, pagos, tareas, asistencia y finanzas.<span class="athena-time">Ahora</span></div></div>`;
+  return;
+ }
+ chat.innerHTML=data.athenaHistory.map(m=>`<div class="athena-message ${m.role}"><div class="athena-bubble">${esc(m.text)}<span class="athena-time">${esc(m.time||'')}</span></div></div>`).join('');
+ chat.scrollTop=chat.scrollHeight;
+}
+function sendAthena(q){
+ if(!q.trim())return;
+ const time=new Intl.DateTimeFormat('es-MX',{hour:'2-digit',minute:'2-digit'}).format(new Date());
+ data.athenaHistory.push({role:'user',text:q,time},{role:'bot',text:athenaAnswer(q),time});
+ data.athenaHistory=data.athenaHistory.slice(-40);
+ save();renderAthenaHistory();athenaSnapshot();
+}
+$('#athenaSuggestions').onclick=e=>{const b=e.target.closest('button');if(b)sendAthena(b.dataset.question||b.textContent)};
+$('#athenaAdminForm').onsubmit=e=>{e.preventDefault();const i=$('#athenaAdminInput');sendAthena(i.value);i.value='';i.focus()};
+$('#clearAthenaHistory').onclick=()=>{if(confirm('¿Limpiar la conversación con Atenea?')){data.athenaHistory=[];save();renderAthenaHistory()}};
 
 
 function studentStats(s){const attended=s.attendance.filter(x=>String(x.value).toLowerCase().includes('asist')).length,total=s.attendance.length,attendanceRate=total?Math.round(attended/total*100):0,completed=s.tasks.filter(x=>String(x.value).toLowerCase().includes('complet')).length,nums=s.grades.map(x=>Number(x.value)).filter(Number.isFinite),gradeAvg=nums.length?(nums.reduce((a,b)=>a+b,0)/nums.length).toFixed(1):'—';return{attendanceRate,completed,gradeAvg}}
@@ -270,5 +395,43 @@ window.openAcademicRecord=(studentId,type)=>{const titles={attendance:'Registrar
 $('#saveAcademicRecord').onclick=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData($('#academicRecordForm')));if(!fd.title||!fd.date)return;const s=data.students.find(x=>x.id===Number(fd.studentId));if(!s)return;const type=fd.recordType;s[type]=s[type]||[];s[type].push({id:Date.now(),title:fd.title,date:fd.date,value:fd.value,description:fd.description});if(type!=='history'){s.history=s.history||[];s.history.push({id:Date.now()+1,date:fd.date,title:`Nuevo registro: ${fd.title}`,description:`Se agregó un registro académico.`})}save();$('#academicRecordDialog').close();openStudentProfile(s.id);renderAll()};
 window.deleteAcademicRecord=(studentId,type,id)=>{if(!confirm('¿Eliminar este registro?'))return;const s=data.students.find(x=>x.id===studentId);if(!s)return;s[type]=(s[type]||[]).filter(x=>x.id!==id);save();openStudentProfile(studentId);renderAll()};
 
-function renderAll(){renderDashboard();renderStudents();renderClasses();renderPayments();renderReports()}
+
+function applySettings(){
+ const s=data.settings||{};
+ const brand=$('.brand strong');if(brand&&s.institution)brand.textContent=s.institution;
+ document.title=`${s.institution||'Rumbo a Ingeniería'} · Galileo`;
+}
+$('#settingsBtn').onclick=()=>{
+ const f=$('#settingsForm');Object.entries(data.settings).forEach(([k,v])=>{const el=f.elements[k];if(el)el.value=v||''});
+ $('#settingsDialog').showModal();
+};
+$('#saveSettings').onclick=e=>{
+ e.preventDefault();const fd=Object.fromEntries(new FormData($('#settingsForm')));
+ data.settings={...data.settings,...fd};save();applySettings();$('#settingsDialog').close();toast('Configuración guardada.');
+};
+$('#backupBtn').onclick=()=>{
+ const payload={version:'0.9.5',exportedAt:new Date().toISOString(),data};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download=`respaldo-galileo-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);toast('Respaldo descargado.');
+};
+$('#restoreInput').onchange=async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try{
+  const parsed=JSON.parse(await file.text()),incoming=parsed.data||parsed;
+  if(!incoming.students||!incoming.classes||!incoming.payments)throw new Error('Formato inválido');
+  if(!confirm('La restauración reemplazará los datos actuales. ¿Continuar?'))return;
+  data={...seed,...incoming,expenses:incoming.expenses||[],athenaHistory:incoming.athenaHistory||[],settings:{...data.settings,...(incoming.settings||{})}};
+  save();applySettings();renderAll();$('#settingsDialog').close();toast('Respaldo restaurado.');
+ }catch(err){toast('No se pudo restaurar: archivo inválido.','error')}
+ e.target.value='';
+};
+$('#resetDataBtn').onclick=()=>{
+ const first=confirm('¿Reiniciar todos los datos de Galileo? Esta acción borrará alumnos, clases y finanzas.');
+ if(!first)return;
+ const phrase=prompt('Escribe REINICIAR para confirmar:');
+ if(phrase!=='REINICIAR')return toast('Reinicio cancelado.','info');
+ data=JSON.parse(JSON.stringify(seed));data.expenses=data.expenses||[];data.athenaHistory=[];data.settings={institution:'Rumbo a Ingeniería',teacher:'',phone:'',email:'',hours:'Lunes a sábado, 5:00–9:00 pm',currency:'MXN'};
+ save();applySettings();renderAll();$('#settingsDialog').close();toast('Datos reiniciados.');
+};
+function renderAll(){renderDashboard();renderStudents();renderClasses();renderPayments();renderReports();renderAthenaHistory();athenaSnapshot();applySettings()}
 save();renderAll();
