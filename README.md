@@ -48,7 +48,7 @@ Abre `admin.html` o pulsa `Panel Galileo` desde la página principal.
 Esta versión es un prototipo local. Los datos se guardan únicamente en el navegador y no cuentan todavía con autenticación ni base de datos en línea.
 
 
-## Proyecto Galileo v0.9.5
+## Proyecto Galileo v1.0.0
 - Precios públicos sencillos para primaria y secundaria.
 - Primera clase gratis destacada.
 - Expediente académico individual.
@@ -56,7 +56,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Indicadores de progreso por alumno.
 
 
-## Proyecto Galileo v0.9.5
+## Proyecto Galileo v1.0.0
 
 ### Calendario visual
 - Vista mensual de lunes a domingo.
@@ -79,7 +79,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Opción “Otro” para registrar conceptos personalizados.
 
 
-### Correcciones v0.9.5
+### Correcciones v1.0.0
 - Las modalidades de 1 hora ya aparecen en la página pública.
 - La sección de precios usa dos tarjetas compactas para comparar Primaria y Secundaria en celulares.
 - Se muestra el ahorro de cada paquete.
@@ -88,7 +88,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - El precio público y el panel administrativo están sincronizados.
 
 
-## Proyecto Galileo v0.9.5 — Centro financiero
+## Proyecto Galileo v1.0.0 — Centro financiero
 
 ### Funciones nuevas
 - Panel mensual de ingresos cobrados.
@@ -116,7 +116,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Secundaria 4 × 1 h 30 min: $550.
 
 
-## v0.9.5 — Atenea Inteligente
+## v1.0.0 — Atenea Inteligente
 - Consultas por nombre de alumno.
 - Resumen individual de progreso, asistencia, tareas, evaluaciones y pagos.
 - Clases de hoy, mañana y próximos siete días.
@@ -130,7 +130,7 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Funcionamiento completamente local y sin conexión.
 
 
-## v0.9.5 — Pulido y preparación para lanzamiento
+## v1.0.0 — Pulido y preparación para lanzamiento
 - Configuración del nombre de la institución y del profesor.
 - Datos de contacto y horario de atención.
 - Copia de seguridad completa en JSON.
@@ -142,3 +142,47 @@ Esta versión es un prototipo local. Los datos se guardan únicamente en el nave
 - Mejoras de accesibilidad para teclado.
 - Diseño responsive adicional en configuración y mensajes.
 - Migración automática desde v0.9.4.
+
+
+## v1.0.0 — Estabilidad y animaciones
+- Pantalla de entrada visible y garantizada en la página principal.
+- Duración mínima de la introducción para evitar que desaparezca por una carga rápida.
+- Entrada independiente del logo, texto, navegación y portada.
+- Efecto de cascada en tarjetas y secciones al desplazarse.
+- Microanimaciones de botones y Atenea.
+- Pantalla de entrada propia para el Panel Galileo.
+- Animación del menú lateral y de las tarjetas administrativas.
+- Compatibilidad con dispositivos que tienen activada la reducción de movimiento, manteniendo una versión ligera pero visible.
+- Sistema de respaldo para cerrar la pantalla de carga aunque falle un recurso externo.
+
+
+# v1.0.0 — Proyecto Horizonte
+
+Primera versión estable de la plataforma.
+
+## Portal del alumno
+- Acceso local por alumno y PIN de cuatro dígitos.
+- Panel personal con progreso, asistencia, promedio y próxima clase.
+- Calendario e historial de clases.
+- Tareas completadas y pendientes.
+- Pagos, saldo pendiente y sesiones restantes.
+- Insignias automáticas.
+- Consulta de certificados obtenidos.
+- Diseño adaptable a celular y computadora.
+
+## Administración Horizonte
+- Control de paquetes con sesiones totales, usadas y restantes.
+- Descuento manual de sesiones y finalización automática.
+- Alertas por paquetes próximos a terminar.
+- Centro de notificaciones académicas y financieras.
+- Avisos de clases de hoy y mañana, pagos pendientes y bajo progreso.
+- Creación, impresión y administración de certificados.
+- Acceso directo al portal del alumno.
+- Migración automática desde v0.9.5.1.
+- Funcionamiento local, sin servidor ni conexión obligatoria.
+
+## Acceso inicial al portal
+El PIN inicial de cada alumno se genera con cuatro dígitos a partir de su identificador interno. Para los alumnos de demostración:
+- Valeria M.: 1001
+- Daniel R.: 1002
+- Emiliano G.: 1003

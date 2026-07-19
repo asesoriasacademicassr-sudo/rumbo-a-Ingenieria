@@ -120,3 +120,62 @@
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(71,131,255,.35);outline-offset:2px}
 button:disabled{opacity:.55;cursor:not-allowed}
 @media(max-width:620px){.settings-grid{grid-template-columns:1fr}.toast-region{left:12px;right:12px;bottom:12px}.toast{min-width:0;max-width:none}}
+
+
+/* v0.9.5.1 — Entrada del Panel Galileo */
+body.admin-booting{overflow:hidden}
+.admin-splash{
+  position:fixed;inset:0;z-index:10000;display:grid;place-content:center;text-align:center;
+  background:
+    radial-gradient(circle at 50% 42%,rgba(47,128,237,.28),transparent 24%),
+    linear-gradient(145deg,#061425,#0a2441);
+  transition:opacity .58s ease,visibility .58s ease,transform .72s cubic-bezier(.2,.8,.2,1);
+}
+.admin-splash.hide{opacity:0;visibility:hidden;transform:scale(1.05)}
+.admin-splash img{width:132px;height:132px;border-radius:50%;margin:auto;position:relative;z-index:2;animation:adminLogoIn .9s cubic-bezier(.16,1,.3,1) both;filter:drop-shadow(0 18px 32px rgba(47,128,237,.4))}
+.admin-splash strong{font:800 1.65rem "Exo 2";margin-top:16px;animation:adminTextIn .65s .3s both}
+.admin-splash span{color:var(--gold);animation:adminTextIn .65s .48s both}
+.admin-splash-orbit{position:absolute;left:50%;top:50%;width:245px;height:245px;border:1px solid rgba(85,182,255,.35);border-radius:50%;transform:translate(-50%,-62%);animation:adminOrbit 2.5s linear infinite}
+.admin-splash-orbit::after{content:"✦";position:absolute;right:23px;top:25px;color:var(--gold);font-size:1.3rem}
+.app-shell{opacity:0;transform:translateY(12px)}
+body.admin-ready .app-shell{animation:adminShellIn .65s cubic-bezier(.16,1,.3,1) forwards}
+.sidebar{transform:translateX(-28px);opacity:0}
+body.admin-ready .sidebar{animation:adminSidebarIn .62s .12s cubic-bezier(.16,1,.3,1) forwards}
+.view.active>*,.dashboard-grid>*,.metrics-grid>*{animation:adminCardIn .55s cubic-bezier(.16,1,.3,1) both}
+.view.active>*:nth-child(2),.dashboard-grid>*:nth-child(2),.metrics-grid>*:nth-child(2){animation-delay:.06s}
+.view.active>*:nth-child(3),.dashboard-grid>*:nth-child(3),.metrics-grid>*:nth-child(3){animation-delay:.12s}
+.view.active>*:nth-child(4),.dashboard-grid>*:nth-child(4),.metrics-grid>*:nth-child(4){animation-delay:.18s}
+button,.icon-btn{transition:transform .18s ease,filter .18s ease,box-shadow .18s ease}
+button:hover,.icon-btn:hover{transform:translateY(-1px);filter:brightness(1.07)}
+button:active,.icon-btn:active{transform:scale(.97)}
+@keyframes adminLogoIn{from{opacity:0;transform:translateY(28px) scale(.58) rotate(-8deg)}to{opacity:1;transform:none}}
+@keyframes adminTextIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes adminOrbit{to{transform:translate(-50%,-62%) rotate(360deg)}}
+@keyframes adminShellIn{to{opacity:1;transform:none}}
+@keyframes adminSidebarIn{to{opacity:1;transform:none}}
+@keyframes adminCardIn{from{opacity:0;transform:translateY(16px) scale(.99)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .admin-splash-orbit{animation-duration:5s}
+  body.admin-ready .app-shell,body.admin-ready .sidebar,.view.active>*{animation-duration:.3s}
+}
+
+/* v1.0 Horizonte */
+.portal-link{text-decoration:none;display:inline-grid;place-items:center}
+.horizon-metrics{margin-bottom:18px}
+.package-progress{height:8px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;min-width:120px}
+.package-progress i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:inherit}
+.status-pill{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:.72rem;font-weight:800;border:1px solid var(--line)}
+.status-pill.low{color:#f3c969;border-color:rgba(243,201,105,.35)}
+.status-pill.done{color:#39c57b;border-color:rgba(57,197,123,.35)}
+.notification-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.notification-filters button.active{background:var(--blue);color:white}
+.notification-list{display:grid;gap:10px}
+.notification-card{display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:start;padding:15px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+.notification-card.unread{border-left:4px solid var(--blue2)}
+.notification-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(71,131,255,.1);font-size:1.2rem}
+.notification-card p{color:var(--muted);margin:.3rem 0}.notification-card small{color:var(--muted)}
+.certificate-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:15px}
+.certificate-card{padding:20px;border:1px solid rgba(242,201,76,.3);border-radius:18px;background:linear-gradient(145deg,rgba(242,201,76,.07),rgba(71,131,255,.05));position:relative;overflow:hidden}
+.certificate-card::after{content:"✦";position:absolute;right:14px;top:8px;font-size:3rem;color:rgba(242,201,76,.12)}
+.certificate-card h3{margin:.4rem 0}.certificate-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+@media(max-width:700px){.notification-card{grid-template-columns:auto 1fr}.notification-card>button{grid-column:2}}

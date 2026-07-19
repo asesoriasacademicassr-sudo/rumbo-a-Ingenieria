@@ -1,0 +1,44 @@
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const KEY='rai_horizonte_v100',OLD_KEY='rai_galileo_v095';
+let data=JSON.parse(localStorage.getItem(KEY)||'null')||JSON.parse(localStorage.getItem(OLD_KEY)||'null');
+let current=null;
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(Number(n||0));
+setTimeout(()=>$('#portalSplash').classList.add('hide'),1400);setTimeout(()=>$('#portalSplash').remove(),2100);
+if(!data){$('#loginError').textContent='Abre primero el Panel Galileo para inicializar la plataforma.'}
+else{
+ data.packages=data.packages||[];data.certificates=data.certificates||[];data.portalUsers=data.portalUsers||[];
+ data.students.forEach(s=>{if(!data.portalUsers.some(u=>u.studentId===s.id))data.portalUsers.push({studentId:s.id,pin:String(1000+(Number(s.id)%9000)),active:true})});
+ localStorage.setItem(KEY,JSON.stringify(data));
+ $('#loginStudent').innerHTML=data.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+}
+function attendance(s){const a=s.attendance||[],ok=a.filter(x=>String(x.value).toLowerCase().includes('asisti')).length;return a.length?Math.round(ok/a.length*100):0}
+function grades(s){const n=(s.grades||[]).map(x=>Number(x.value)).filter(Number.isFinite);return n.length?(n.reduce((a,b)=>a+b,0)/n.length).toFixed(1):'—'}
+function tasks(s){const all=s.tasks||[],done=all.filter(x=>String(x.value).toLowerCase().includes('complet')).length;return {all,done,pending:all.length-done}}
+function packageRem(p){return Math.max(0,Number(p.total||0)-Number(p.used||0))}
+$('#loginForm').onsubmit=e=>{
+ e.preventDefault();if(!data)return;
+ const id=Number($('#loginStudent').value),user=data.portalUsers.find(u=>u.studentId===id&&u.active);
+ if(!user||user.pin!==$('#loginPin').value.trim()){return $('#loginError').textContent='PIN incorrecto. Revisa el acceso proporcionado por el administrador.'}
+ current=data.students.find(s=>s.id===id);sessionStorage.setItem('horizonte_student',String(id));openPortal();
+};
+const saved=Number(sessionStorage.getItem('horizonte_student'));if(saved&&data?.students.some(s=>s.id===saved)){current=data.students.find(s=>s.id===saved);openPortal()}
+function openPortal(){
+ $('#loginView').classList.add('hidden');$('#portalApp').classList.remove('hidden');$('#studentName').textContent=current.name;$('#studentInitial').textContent=current.name[0];$('#portalInstitution').textContent=data.settings?.institution||'Rumbo a Ingeniería';renderAll();
+}
+function renderAll(){
+ const a=attendance(current),t=tasks(current),g=grades(current),classes=data.classes.filter(c=>c.student===current.name).sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time)),upcoming=classes.filter(c=>c.status==='Pendiente'&&c.date>=new Date().toISOString().slice(0,10)),payments=data.payments.filter(p=>p.student===current.name),pkg=data.packages.find(p=>p.student===current.name&&p.status==='Activo'),certs=data.certificates.filter(c=>c.student===current.name);
+ $('#home-page').innerHTML=`<div class="hero-card"><div><p class="eyebrow">Bienvenido a Proyecto Horizonte</p><h1>Hola, ${esc(current.name)}</h1><p>${esc(current.goal||'Continúa avanzando hacia tu meta académica.')}</p></div><div class="progress-ring" style="--value:${Number(current.progress)}%"><b>${current.progress}%</b></div></div><div class="portal-grid"><article class="card metric"><span>Próxima clase</span><b>${upcoming[0]?esc(upcoming[0].date):'Sin fecha'}</b><small>${upcoming[0]?esc(upcoming[0].subject+' · '+upcoming[0].time):'No hay clases pendientes'}</small></article><article class="card metric"><span>Asistencia</span><b>${a}%</b><small>${(current.attendance||[]).length} registros</small></article><article class="card metric"><span>Promedio</span><b>${g}</b><small>${(current.grades||[]).length} evaluaciones</small></article><article class="card wide"><h3>Próximas clases</h3><div class="list">${upcoming.slice(0,4).map(c=>`<div class="list-item"><span><b>${esc(c.subject)}</b><small>${esc(c.topic||'Tema por definir')}</small></span><span>${esc(c.date)} · ${esc(c.time)}</span></div>`).join('')||'<div class="empty">No hay clases próximas.</div>'}</div></article><article class="card"><h3>Tu paquete</h3>${pkg?`<b>${esc(pkg.name)}</b><p>${packageRem(pkg)} de ${pkg.total} sesiones disponibles.</p>`:'<p>No tienes un paquete activo.</p>'}</article></div>`;
+ $('#classes-page').innerHTML=`<div class="card"><h3>Calendario de clases</h3><div class="list">${classes.map(c=>`<div class="list-item"><span><b>${esc(c.subject)}</b><small>${esc(c.topic||'Tema por definir')}</small></span><span>${esc(c.date)} · ${esc(c.time)}<small><span class="status">${esc(c.status)}</span></small></span></div>`).join('')||'<div class="empty">No hay clases registradas.</div>'}</div></div>`;
+ $('#academic-page').innerHTML=`<div class="portal-grid"><article class="card metric"><span>Progreso general</span><b>${current.progress}%</b></article><article class="card metric"><span>Asistencia</span><b>${a}%</b></article><article class="card metric"><span>Promedio</span><b>${g}</b></article><article class="card wide"><h3>Historial de evaluaciones</h3><div class="list">${(current.grades||[]).map(x=>`<div class="list-item"><span>${esc(x.label||x.title||'Evaluación')}</span><b>${esc(x.value)}</b></div>`).join('')||'<div class="empty">Sin evaluaciones todavía.</div>'}</div></article><article class="card"><h3>Objetivo actual</h3><p>${esc(current.goal||'Sin objetivo definido')}</p><small>${esc(current.notes||'')}</small></article></div>`;
+ $('#tasks-page').innerHTML=`<div class="portal-grid"><article class="card metric"><span>Completadas</span><b>${t.done}</b></article><article class="card metric"><span>Pendientes</span><b>${t.pending}</b></article><article class="card wide"><h3>Mis tareas</h3><div class="list">${t.all.map(x=>`<div class="list-item"><span><b>${esc(x.label||x.title||'Actividad')}</b><small>${esc(x.date||'')}</small></span><span class="status">${esc(x.value)}</span></div>`).join('')||'<div class="empty">No hay tareas registradas.</div>'}</div></article></div>`;
+ const pending=payments.filter(p=>p.status==='Pendiente').reduce((a,p)=>a+Number(p.amount),0);
+ $('#payments-page').innerHTML=`<div class="portal-grid"><article class="card metric"><span>Saldo pendiente</span><b>${money(pending)}</b></article><article class="card metric"><span>Sesiones restantes</span><b>${pkg?packageRem(pkg):0}</b></article><article class="card wide"><h3>Historial de pagos</h3><div class="list">${payments.map(p=>`<div class="list-item"><span><b>${esc(p.concept)}</b><small>${esc(p.date)} · ${esc(p.method||'')}</small></span><span><b>${money(p.amount)}</b><small>${esc(p.status)}</small></span></div>`).join('')||'<div class="empty">Sin movimientos registrados.</div>'}</div></article></div>`;
+ const badges=[['🚀','Primer avance',current.progress>=20],['⭐','Mitad del camino',current.progress>=50],['🏆','Meta destacada',current.progress>=80],['📚','Tareas constantes',t.done>=3],['🎯','Asistencia ejemplar',a>=90],['📜','Certificado obtenido',certs.length>0]];
+ $('#achievements-page').innerHTML=`<div class="card"><h3>Insignias</h3><div class="badge-grid">${badges.map(b=>`<article class="badge ${b[2]?'':'locked'}"><div class="icon">${b[0]}</div><b>${b[1]}</b><p>${b[2]?'Desbloqueada':'Aún bloqueada'}</p></article>`).join('')}</div></div><div class="card" style="margin-top:16px"><h3>Mis certificados</h3><div class="list">${certs.map(c=>`<div class="list-item"><span><b>${esc(c.title)}</b><small>${esc(c.type)} · ${esc(c.subject||'')}</small></span><span>${esc(c.date)}</span></div>`).join('')||'<div class="empty">Todavía no tienes certificados.</div>'}</div></div>`;
+}
+const titles={home:'Inicio',classes:'Mis clases',academic:'Mi progreso',tasks:'Tareas',payments:'Pagos y paquete',achievements:'Logros'};
+$$('[data-page]').forEach(b=>b.onclick=()=>{$$('.portal-page').forEach(p=>p.classList.remove('active'));$('#'+b.dataset.page+'-page').classList.add('active');$$('[data-page]').forEach(x=>x.classList.toggle('active',x===b));$('#portalTitle').textContent=titles[b.dataset.page];$('.portal-sidebar').classList.remove('open')});
+$('#portalMenu').onclick=()=>$('.portal-sidebar').classList.toggle('open');
+$('#logoutBtn').onclick=()=>{sessionStorage.removeItem('horizonte_student');location.reload()};

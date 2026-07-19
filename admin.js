@@ -1,7 +1,25 @@
 
+
+const adminBootStarted=performance.now();
+window.addEventListener('load',()=>{
+ const remaining=Math.max(0,1350-(performance.now()-adminBootStarted));
+ setTimeout(()=>{
+  document.body.classList.remove('admin-booting');
+  document.body.classList.add('admin-ready');
+  const splash=$('#adminSplash');splash?.classList.add('hide');
+  setTimeout(()=>splash?.remove(),900);
+ },remaining);
+});
+setTimeout(()=>{
+ if(document.body.classList.contains('admin-booting')){
+  document.body.classList.remove('admin-booting');
+  document.body.classList.add('admin-ready');
+  $('#adminSplash')?.classList.add('hide');
+ }
+},3800);
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const KEY='rai_galileo_v095';
-const OLD_KEY='rai_galileo_v094';
+const KEY='rai_horizonte_v100';
+const OLD_KEY='rai_galileo_v095';
 const seed={
  students:[
   {id:1,name:'Valeria M.',age:13,grade:'2° secundaria',subject:'Matemáticas',progress:68,goal:'Mejorar álgebra',notes:'Avanza bien con ejemplos visuales.'},
@@ -26,6 +44,16 @@ data.expenses=Array.isArray(data.expenses)?data.expenses:[];
 data.payments=(data.payments||[]).map(p=>({...p,method:p.method||'No registrado'}));
 data.athenaHistory=Array.isArray(data.athenaHistory)?data.athenaHistory:[];
 data.settings={institution:'Rumbo a Ingeniería',teacher:'',phone:'',email:'',hours:'Lunes a sábado, 5:00–9:00 pm',currency:'MXN',...(data.settings||{})};
+data.packages=Array.isArray(data.packages)?data.packages:[];
+data.notifications=Array.isArray(data.notifications)?data.notifications:[];
+data.certificates=Array.isArray(data.certificates)?data.certificates:[];
+data.portalUsers=Array.isArray(data.portalUsers)?data.portalUsers:[];
+data.students.forEach(s=>{
+ if(!data.portalUsers.some(u=>u.studentId===s.id)){
+  data.portalUsers.push({studentId:s.id,pin:String(1000+(Number(s.id)%9000)),active:true});
+ }
+});
+
 data.students=data.students.map(s=>({...s,attendance:s.attendance||[],tasks:s.tasks||[],grades:s.grades||[],history:s.history||[{id:Date.now()+Math.random(),date:new Date().toISOString().slice(0,10),title:'Perfil creado',description:'Alumno registrado en Proyecto Galileo.'}]}));
 let calendarCursor=new Date();
 calendarCursor.setDate(1);
@@ -47,7 +75,7 @@ function navigate(view){
  $$('.view').forEach(v=>v.classList.remove('active'));
  $(`#${view}-view`).classList.add('active');
  $$('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
- const titles={dashboard:'Resumen general',students:'Administración de alumnos',classes:'Agenda de clases',payments:'Centro financiero',reports:'Reportes',athena:'Atenea Administrativa'};
+ const titles={dashboard:'Resumen general',students:'Administración de alumnos',classes:'Agenda de clases',payments:'Centro financiero',packages:'Paquetes de clases',notifications:'Centro de notificaciones',certificates:'Certificados y diplomas',reports:'Reportes',athena:'Atenea Administrativa'};
  $('#viewTitle').textContent=titles[view];
  $('#sidebar').classList.remove('open');
  renderAll();
@@ -433,5 +461,78 @@ $('#resetDataBtn').onclick=()=>{
  data=JSON.parse(JSON.stringify(seed));data.expenses=data.expenses||[];data.athenaHistory=[];data.settings={institution:'Rumbo a Ingeniería',teacher:'',phone:'',email:'',hours:'Lunes a sábado, 5:00–9:00 pm',currency:'MXN'};
  save();applySettings();renderAll();$('#settingsDialog').close();toast('Datos reiniciados.');
 };
-function renderAll(){renderDashboard();renderStudents();renderClasses();renderPayments();renderReports();renderAthenaHistory();athenaSnapshot();applySettings()}
-save();renderAll();
+
+let notificationFilter='all';
+function packageRemaining(pkg){return Math.max(0,Number(pkg.total||0)-Number(pkg.used||0))}
+function renderPackages(){
+ const rows=[...data.packages].sort((a,b)=>(b.purchaseDate||'').localeCompare(a.purchaseDate||''));
+ const active=rows.filter(p=>p.status==='Activo'&&packageRemaining(p)>0);
+ $('#pkgActive').textContent=active.length;
+ $('#pkgRemaining').textContent=active.reduce((a,p)=>a+packageRemaining(p),0);
+ $('#pkgLow').textContent=active.filter(p=>packageRemaining(p)<=1).length;
+ $('#packagesTable').innerHTML=rows.length?`<table><thead><tr><th>Alumno</th><th>Paquete</th><th>Uso</th><th>Vencimiento</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${rows.map(p=>{
+  const rem=packageRemaining(p),pct=Math.min(100,Math.round(Number(p.used||0)/Number(p.total||1)*100));
+  return `<tr><td><b>${esc(p.student)}</b></td><td>${esc(p.name)}<small>${esc(p.duration||'')}</small></td><td><b>${p.used||0}/${p.total}</b><div class="package-progress"><i style="width:${pct}%"></i></div><small>${rem} restantes</small></td><td>${esc(p.expires||'Sin vencimiento')}</td><td><span class="status-pill ${rem<=1?'low':''}">${esc(rem===0?'Finalizado':p.status)}</span></td><td><button data-use-package="${p.id}" ${rem===0?'disabled':''}>Usar sesión</button> <button data-delete-package="${p.id}">Eliminar</button></td></tr>`;
+ }).join('')}</tbody></table>`:'<div class="empty">Todavía no hay paquetes asignados.</div>';
+}
+function populateHorizonSelects(){
+ const options=data.students.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('');
+ if($('#packageStudent'))$('#packageStudent').innerHTML=options;
+ if($('#certificateStudent'))$('#certificateStudent').innerHTML=options;
+}
+function generateNotifications(){
+ const generated=[],today=localDate(),tomorrow=localDate(1);
+ data.classes.filter(c=>c.status==='Pendiente'&&(c.date===today||c.date===tomorrow)).forEach(c=>generated.push({
+  id:`class-${c.id}-${c.date}`,type:'academic',icon:'📅',title:c.date===today?'Clase programada hoy':'Clase programada mañana',
+  message:`${c.student} · ${c.subject} a las ${c.time}.`,date:today,read:false
+ }));
+ data.payments.filter(p=>p.status==='Pendiente').forEach(p=>generated.push({
+  id:`pay-${p.id}`,type:'financial',icon:'💳',title:'Pago pendiente',message:`${p.student} tiene ${money(p.amount)} pendiente por ${p.concept}.`,date:today,read:false
+ }));
+ data.packages.filter(p=>p.status==='Activo'&&packageRemaining(p)<=1).forEach(p=>generated.push({
+  id:`pkg-${p.id}-${packageRemaining(p)}`,type:'academic',icon:'📦',title:'Paquete próximo a terminar',message:`A ${p.student} le quedan ${packageRemaining(p)} sesiones.`,date:today,read:false
+ }));
+ data.students.filter(s=>Number(s.progress)<45).forEach(s=>generated.push({
+  id:`progress-${s.id}-${s.progress}`,type:'academic',icon:'📊',title:'Seguimiento académico',message:`${s.name} registra ${s.progress}% de progreso.`,date:today,read:false
+ }));
+ generated.forEach(n=>{if(!data.notifications.some(x=>x.id===n.id))data.notifications.unshift(n)});
+ save();
+}
+function renderNotifications(){
+ let rows=data.notifications;
+ if(notificationFilter==='unread')rows=rows.filter(n=>!n.read);
+ else if(notificationFilter!=='all')rows=rows.filter(n=>n.type===notificationFilter);
+ $('#notificationsList').innerHTML=rows.length?rows.map(n=>`<article class="notification-card ${n.read?'':'unread'}"><div class="notification-icon">${n.icon||'🔔'}</div><div><b>${esc(n.title)}</b><p>${esc(n.message)}</p><small>${esc(n.date||'')}</small></div><button data-read-notification="${esc(n.id)}">${n.read?'Marcar no leída':'Marcar leída'}</button></article>`).join(''):'<div class="empty">No hay notificaciones en esta categoría.</div>';
+}
+function renderCertificates(){
+ $('#certificatesGrid').innerHTML=data.certificates.length?data.certificates.map(c=>`<article class="certificate-card"><p class="eyebrow">${esc(c.type)}</p><h3>${esc(c.title)}</h3><b>${esc(c.student)}</b><p>${esc(c.description)}</p><small>${esc(c.subject||'Formación académica')} · ${esc(c.date)}</small><div class="certificate-actions"><button data-print-certificate="${c.id}">Imprimir</button><button data-delete-certificate="${c.id}">Eliminar</button></div></article>`).join(''):'<div class="empty">Todavía no se han creado certificados.</div>';
+}
+function printCertificate(id){
+ const c=data.certificates.find(x=>x.id===id);if(!c)return;
+ const institution=esc(data.settings.institution||'Rumbo a Ingeniería'),teacher=esc(data.settings.teacher||'Dirección académica');
+ const w=window.open('','_blank','width=1000,height=700');
+ w.document.write(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(c.title)}</title><style>
+ body{font-family:Georgia,serif;margin:0;display:grid;place-items:center;min-height:100vh;background:#eef4fb}.cert{width:900px;box-sizing:border-box;padding:65px;border:12px double #174a78;background:white;text-align:center;position:relative}.cert:after{content:"✦";font-size:70px;color:#d3aa32;position:absolute;right:45px;top:25px}.brand{letter-spacing:.18em;color:#174a78}.student{font-size:42px;margin:28px;border-bottom:2px solid #d3aa32;padding-bottom:12px}.desc{font-size:20px;line-height:1.6}.footer{display:flex;justify-content:space-around;margin-top:55px}.line{border-top:1px solid #333;padding-top:8px;width:250px}@media print{body{background:white}.cert{width:100%;min-height:95vh}}</style></head><body><main class="cert"><p class="brand">${institution}</p><h1>${esc(c.title)}</h1><p>Se otorga el presente reconocimiento a</p><div class="student">${esc(c.student)}</div><p class="desc">${esc(c.description)}</p><p><b>${esc(c.subject||'Formación académica')}</b></p><div class="footer"><div class="line">${teacher}</div><div class="line">${esc(c.date)}</div></div></main><script>window.onload=()=>window.print()<\/script></body></html>`);
+ w.document.close();
+}
+$('#newPackageBtn').onclick=()=>{populateHorizonSelects();const f=$('#packageForm');f.reset();f.elements.purchaseDate.value=localDate();$('#packageDialog').showModal()};
+$('#packageForm').onsubmit=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData(e.target));data.packages.push({...fd,id:Date.now(),total:Number(fd.total),used:0});save();$('#packageDialog').close();generateNotifications();renderAll();toast('Paquete asignado.')};
+$('#packagesTable').onclick=e=>{
+ const use=e.target.closest('[data-use-package]'),del=e.target.closest('[data-delete-package]');
+ if(use){const p=data.packages.find(x=>x.id===Number(use.dataset.usePackage));if(p&&packageRemaining(p)>0){p.used=Number(p.used||0)+1;if(packageRemaining(p)===0)p.status='Finalizado';save();generateNotifications();renderAll();toast('Sesión descontada del paquete.')}}
+ if(del&&confirm('¿Eliminar este paquete?')){data.packages=data.packages.filter(x=>x.id!==Number(del.dataset.deletePackage));save();renderAll();toast('Paquete eliminado.','info')}
+};
+$('#generateNotificationsBtn').onclick=()=>{generateNotifications();renderNotifications();toast('Notificaciones actualizadas.')};
+$$('[data-notification-filter]').forEach(b=>b.onclick=()=>{notificationFilter=b.dataset.notificationFilter;$$('[data-notification-filter]').forEach(x=>x.classList.toggle('active',x===b));renderNotifications()});
+$('#notificationsList').onclick=e=>{const b=e.target.closest('[data-read-notification]');if(!b)return;const n=data.notifications.find(x=>String(x.id)===b.dataset.readNotification);if(n){n.read=!n.read;save();renderNotifications()}};
+$('#newCertificateBtn').onclick=()=>{populateHorizonSelects();const f=$('#certificateForm');f.reset();f.elements.date.value=localDate();$('#certificateDialog').showModal()};
+$('#certificateForm').onsubmit=e=>{e.preventDefault();const fd=Object.fromEntries(new FormData(e.target));data.certificates.unshift({...fd,id:Date.now()});save();$('#certificateDialog').close();renderAll();toast('Certificado creado.')};
+$('#certificatesGrid').onclick=e=>{
+ const print=e.target.closest('[data-print-certificate]'),del=e.target.closest('[data-delete-certificate]');
+ if(print)printCertificate(Number(print.dataset.printCertificate));
+ if(del&&confirm('¿Eliminar este certificado?')){data.certificates=data.certificates.filter(x=>x.id!==Number(del.dataset.deleteCertificate));save();renderAll();toast('Certificado eliminado.','info')}
+};
+$$('[data-close]').forEach(b=>b.onclick=()=>$('#'+b.dataset.close).close());
+function renderAll(){renderDashboard();renderStudents();renderClasses();renderPayments();renderPackages();renderNotifications();renderCertificates();renderReports();renderAthenaHistory();athenaSnapshot();populateHorizonSelects();applySettings()}
+save();generateNotifications();
+renderAll();

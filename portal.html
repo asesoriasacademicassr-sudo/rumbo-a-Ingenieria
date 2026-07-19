@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portal del alumno · Rumbo a Ingeniería</title>
+<link rel="icon" href="favicon.png"><link rel="stylesheet" href="portal.css">
+</head>
+<body>
+<div id="portalSplash" class="portal-splash"><img src="favicon.png" alt=""><strong>Proyecto Horizonte</strong><span>Portal del alumno · v1.0.0</span></div>
+<section id="loginView" class="login-shell">
+  <div class="login-card">
+    <a href="index.html" class="back-link">← Página principal</a>
+    <img src="logo-oficial.png" alt="Rumbo a Ingeniería" class="login-logo">
+    <p class="eyebrow">Proyecto Horizonte</p><h1>Portal del alumno</h1>
+    <p>Consulta tus clases, progreso, tareas, pagos, paquetes e insignias.</p>
+    <form id="loginForm">
+      <label>Alumno<select id="loginStudent" required></select></label>
+      <label>PIN de acceso<input id="loginPin" inputmode="numeric" maxlength="4" required placeholder="4 dígitos"></label>
+      <button>Entrar al portal</button>
+    </form>
+    <small>En esta versión local, el PIN inicial se genera automáticamente. El administrador puede consultarlo en la ficha del alumno.</small>
+    <div id="loginError" class="error"></div>
+  </div>
+</section>
+<div id="portalApp" class="portal-app hidden">
+  <aside class="portal-sidebar">
+    <img src="favicon.png" alt=""><strong id="portalInstitution">Rumbo a Ingeniería</strong>
+    <nav>
+      <button class="active" data-page="home">🏠 Inicio</button>
+      <button data-page="classes">📅 Mis clases</button>
+      <button data-page="academic">📊 Mi progreso</button>
+      <button data-page="tasks">📝 Tareas</button>
+      <button data-page="payments">💳 Pagos y paquete</button>
+      <button data-page="achievements">🏅 Logros</button>
+    </nav>
+    <button id="logoutBtn">Cerrar sesión</button>
+  </aside>
+  <main class="portal-main">
+    <header><button id="portalMenu">☰</button><div><small>Portal del alumno</small><h2 id="portalTitle">Inicio</h2></div><div class="student-chip"><span id="studentInitial">A</span><b id="studentName"></b></div></header>
+    <section id="home-page" class="portal-page active"></section>
+    <section id="classes-page" class="portal-page"></section>
+    <section id="academic-page" class="portal-page"></section>
+    <section id="tasks-page" class="portal-page"></section>
+    <section id="payments-page" class="portal-page"></section>
+    <section id="achievements-page" class="portal-page"></section>
+  </main>
+</div>
+<script src="portal.js"></script>
+</body></html>

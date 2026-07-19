@@ -1,13 +1,37 @@
 const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
-window.addEventListener('load',()=>setTimeout(()=>$('#splash')?.classList.add('hide'),850));
+const splash=$('#splash');
+const revealPage=()=>{
+  document.body.classList.remove('is-booting');
+  document.body.classList.add('page-ready');
+  splash?.classList.add('hide');
+  $$('.hero .reveal').forEach((el,i)=>setTimeout(()=>el.classList.add('visible'),130+i*170));
+  setTimeout(()=>$('.intro-atenea.reveal')?.classList.add('visible'),620);
+  setTimeout(()=>splash?.remove(),1050);
+};
+/* Duración mínima para que la entrada sí sea perceptible incluso con caché rápida. */
+const bootStarted=performance.now();
+window.addEventListener('load',()=>{
+  const remaining=Math.max(0,1750-(performance.now()-bootStarted));
+  setTimeout(revealPage,remaining);
+});
+/* Respaldo si algún recurso externo tarda demasiado. */
+setTimeout(()=>{if(document.body.classList.contains('is-booting'))revealPage()},4200);
 
-const menu=$('.menu-button'),nav=$('.nav');
-menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',open)});
-$$('.nav a').forEach(a=>a.onclick=()=>nav.classList.remove('open'));
-
-const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.08,rootMargin:'0px 0px -24px'});
-$$('.reveal').forEach((e,i)=>{e.style.animationDelay=`${Math.min((i%4)*70,210)}ms`;observer.observe(e)});
-setTimeout(()=>$$('.hero .reveal, .intro-atenea.reveal').forEach(e=>e.classList.add('visible')),920);
+const revealElements=$$('.reveal');
+revealElements.forEach((el,i)=>{
+  el.style.setProperty('--stagger-delay',`${(i%4)*85}ms`);
+});
+const observer='IntersectionObserver' in window?new IntersectionObserver(entries=>entries.forEach(entry=>{
+  if(entry.isIntersecting){
+    entry.target.classList.add('visible');
+    observer.unobserve(entry.target);
+  }
+}),{threshold:.06,rootMargin:'0px 0px -18px'}):null;
+revealElements.forEach(el=>{
+  if(!el.closest('.hero')&&!el.classList.contains('intro-atenea')){
+    if(observer)observer.observe(el);else el.classList.add('visible');
+  }
+});
 
 
 $$('.compact-cta').forEach(link=>link.addEventListener('click',()=>{

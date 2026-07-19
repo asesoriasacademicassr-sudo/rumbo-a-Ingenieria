@@ -67,4 +67,100 @@ body.light .compact-price-card{background:white}
  .pricing-section{padding-left:12px;padding-right:12px}.compact-price-grid{gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}.compact-price-card{padding:10px;border-radius:14px}.compact-price-card header{gap:7px;padding-bottom:8px}.compact-price-card header .level-icon{font-size:1.2rem}.compact-price-card h3{font-size:.96rem}.compact-price-card header small{font-size:.58rem}.price-row{gap:5px;padding:8px 0}.price-row b{font-size:.69rem;line-height:1.15}.price-row span{font-size:.59rem}.price-row>strong,.price-value strong{font-size:.94rem}.price-value em{font-size:.51rem}.price-row.recommended{margin:0 -4px;padding-left:4px;padding-right:4px}.compact-cta{font-size:.68rem;padding:8px 5px;margin-top:9px}.package-benefit{font-size:.7rem;text-align:center;margin-top:12px}.first-class-note{padding:10px 12px;margin-top:12px}.first-class-note b,.first-class-note span{font-size:.72rem}
 }
 @media(max-width:370px){.compact-price-card{padding:8px}.price-row b{font-size:.63rem}.price-row span{font-size:.54rem}.price-row>strong,.price-value strong{font-size:.86rem}.price-value em{font-size:.47rem}.compact-cta{font-size:.62rem}}
-@media(prefers-reduced-motion:reduce){.splash img,.splash strong,.splash span,.reveal.visible{animation:none!important}}
+
+
+
+/* v0.9.5.1 — Animación de entrada garantizada */
+body.is-booting{overflow:hidden}
+.splash{
+  display:grid!important;
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  min-height:100dvh;
+  overflow:hidden;
+  isolation:isolate;
+}
+.splash::before{
+  content:"";
+  position:absolute;
+  inset:-25%;
+  z-index:-2;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(47,128,237,.28),transparent 28%),
+    radial-gradient(circle at 28% 30%,rgba(85,182,255,.16),transparent 22%),
+    radial-gradient(circle at 72% 68%,rgba(242,201,76,.12),transparent 20%);
+  animation:splashNebula 2.8s ease-in-out infinite alternate;
+}
+.splash::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(135deg,rgba(255,255,255,.03),transparent 35%,rgba(85,182,255,.04));
+}
+.splash-rings{position:absolute;left:50%;top:50%;width:270px;height:270px;transform:translate(-50%,-58%);z-index:-1}
+.splash-rings i{position:absolute;inset:0;border:1px solid rgba(85,182,255,.25);border-radius:50%;animation:splashRing 2.1s ease-out infinite}
+.splash-rings i:nth-child(2){animation-delay:.45s}.splash-rings i:nth-child(3){animation-delay:.9s}
+.splash img{
+  width:154px;
+  filter:drop-shadow(0 18px 32px rgba(47,128,237,.38));
+  animation:galileoLogoEntrance 1s cubic-bezier(.16,1,.3,1) both,logoFloat 2.4s 1s ease-in-out infinite;
+}
+.splash strong{animation:galileoTextEntrance .7s .35s both}
+.splash span{animation:galileoTextEntrance .7s .52s both}
+.splash.hide{
+  opacity:0;
+  visibility:hidden;
+  transform:scale(1.055);
+  transition:opacity .62s ease,visibility .62s ease,transform .75s cubic-bezier(.2,.8,.2,1);
+}
+.site-header{transform:translateY(-105%);opacity:0}
+body.page-ready .site-header{animation:headerDrop .65s .05s cubic-bezier(.2,.85,.2,1) forwards}
+.hero-copy.reveal.visible{animation:heroCopyEntrance .85s cubic-bezier(.16,1,.3,1) both}
+.hero-visual.reveal.visible{animation:heroVisualEntrance .95s .12s cubic-bezier(.16,1,.3,1) both}
+.reveal{opacity:0;transform:translateY(30px) scale(.985)}
+.reveal.visible{animation:sectionReveal .7s cubic-bezier(.16,1,.3,1) both}
+.mission-grid .reveal.visible,.badges-grid .reveal.visible,.resource-grid .reveal.visible,
+.compact-price-grid .reveal.visible,.dashboard-grid .reveal.visible{
+  animation-delay:var(--stagger-delay,0ms);
+}
+.button,.compact-cta,.mini-button,.mission-button,.resource-card button{
+  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease,border-color .2s ease;
+}
+.button:hover,.compact-cta:hover,.mini-button:hover,.mission-button:hover,.resource-card button:hover{
+  transform:translateY(-2px) scale(1.015);
+  filter:brightness(1.08);
+}
+.button:active,.compact-cta:active,.mini-button:active,.mission-button:active,.resource-card button:active{
+  transform:scale(.97);
+}
+.atenea-portrait img,.athena-toggle img{animation:ateneaBreathing 4.2s ease-in-out infinite}
+
+@keyframes galileoLogoEntrance{
+  0%{opacity:0;transform:translateY(32px) scale(.52) rotate(-10deg)}
+  62%{opacity:1;transform:translateY(-5px) scale(1.06) rotate(2deg)}
+  100%{opacity:1;transform:none}
+}
+@keyframes galileoTextEntrance{from{opacity:0;transform:translateY(15px);letter-spacing:.18em}to{opacity:1;transform:none;letter-spacing:normal}}
+@keyframes logoFloat{50%{transform:translateY(-7px)}}
+@keyframes splashRing{0%{opacity:.65;transform:scale(.45)}100%{opacity:0;transform:scale(1.18)}}
+@keyframes splashNebula{to{transform:translate3d(2%,-2%,0) scale(1.05)}}
+@keyframes headerDrop{to{opacity:1;transform:none}}
+@keyframes heroCopyEntrance{from{opacity:0;transform:translateX(-46px)}to{opacity:1;transform:none}}
+@keyframes heroVisualEntrance{from{opacity:0;transform:translateX(48px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes sectionReveal{from{opacity:0;transform:translateY(30px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes ateneaBreathing{50%{transform:translateY(-5px) scale(1.008)}}
+
+@media(max-width:640px){
+  .splash img{width:132px}
+  .splash-rings{width:225px;height:225px}
+  .hero-copy.reveal.visible{animation-name:sectionReveal}
+  .hero-visual.reveal.visible{animation-name:sectionReveal}
+}
+/* Se mantiene una versión ligera, pero visible, aun con movimiento reducido. */
+@media(prefers-reduced-motion:reduce){
+  .orbit,.atenea-portrait img,.athena-toggle img{animation:none}
+  .splash-rings i{animation-duration:3.5s}
+  .reveal.visible{animation-duration:.32s}
+}

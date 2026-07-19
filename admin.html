@@ -4,27 +4,36 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#07182d">
-  <title>Panel Galileo | Rumbo a Ingeniería v0.9.5</title>
+  <title>Panel Galileo | Rumbo a Ingeniería v1.0.0</title>
   <link rel="icon" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css">
 </head>
-<body>
+<body class="admin-booting">
+<div id="adminSplash" class="admin-splash" aria-label="Abriendo Panel Galileo">
+  <div class="admin-splash-orbit"></div>
+  <img src="favicon.png" alt="">
+  <strong>Panel Galileo</strong>
+  <span>Rumbo a Ingeniería · v1.0.0</span>
+</div>
 <div class="app-shell">
   <aside class="sidebar" id="sidebar">
-    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v0.9.5</small></span></a>
+    <a href="index.html" class="brand"><img src="favicon.png" alt=""><span><b>Rumbo a</b> Ingeniería<small>Proyecto Galileo · v1.0.0</small></span></a>
     <nav>
       <button class="nav-item active" data-view="dashboard">⌂ <span>Resumen</span></button>
       <button class="nav-item" data-view="students">👨‍🎓 <span>Alumnos</span></button>
       <button class="nav-item" data-view="classes">📅 <span>Clases</span></button>
       <button class="nav-item" data-view="payments">💰 <span>Finanzas</span></button>
+      <button class="nav-item" data-view="packages"><span>📦</span> Paquetes</button>
+      <button class="nav-item" data-view="notifications"><span>🔔</span> Notificaciones</button>
+      <button class="nav-item" data-view="certificates"><span>📜</span> Certificados</button>
       <button class="nav-item" data-view="reports">📊 <span>Reportes</span></button>
       <button class="nav-item" data-view="athena">🤖 <span>Atenea</span></button>
     </nav>
     <div class="sidebar-bottom">
-      <button id="themeToggle">☀ Cambiar tema</button>
+      <a href="portal.html" class="icon-btn portal-link" title="Portal del alumno">🎓</a><button id="themeToggle">☀ Cambiar tema</button>
       <a href="index.html">← Volver al sitio</a>
     </div>
   </aside>
@@ -181,6 +190,42 @@
       </article>
     </section>
 
+    
+    <section class="view" id="packages-view">
+      <div class="section-toolbar">
+        <div><p class="eyebrow">Control automático</p><h2>Paquetes de clases</h2></div>
+        <button id="newPackageBtn" class="primary">+ Asignar paquete</button>
+      </div>
+      <div class="metrics-grid horizon-metrics">
+        <article class="metric-card"><span>Paquetes activos</span><b id="pkgActive">0</b></article>
+        <article class="metric-card"><span>Sesiones disponibles</span><b id="pkgRemaining">0</b></article>
+        <article class="metric-card"><span>Próximos a terminar</span><b id="pkgLow">0</b></article>
+      </div>
+      <div class="panel"><div id="packagesTable" class="table-wrap"></div></div>
+    </section>
+
+    <section class="view" id="notifications-view">
+      <div class="section-toolbar">
+        <div><p class="eyebrow">Centro de avisos</p><h2>Notificaciones</h2></div>
+        <button id="generateNotificationsBtn">Actualizar avisos</button>
+      </div>
+      <div class="notification-filters">
+        <button class="active" data-notification-filter="all">Todas</button>
+        <button data-notification-filter="unread">No leídas</button>
+        <button data-notification-filter="academic">Académicas</button>
+        <button data-notification-filter="financial">Financieras</button>
+      </div>
+      <div id="notificationsList" class="notification-list"></div>
+    </section>
+
+    <section class="view" id="certificates-view">
+      <div class="section-toolbar">
+        <div><p class="eyebrow">Reconocimientos</p><h2>Certificados y diplomas</h2></div>
+        <button id="newCertificateBtn" class="primary">+ Crear certificado</button>
+      </div>
+      <div id="certificatesGrid" class="certificate-grid"></div>
+    </section>
+
     <section class="view" id="reports-view">
       <div class="section-head"><div><p class="eyebrow">Seguimiento</p><h2>Reportes</h2><p>Resumen académico y administrativo del grupo.</p></div><button class="primary" id="printReport">Imprimir reporte</button></div>
       <div class="report-grid">
@@ -195,7 +240,7 @@
       <div class="athena-smart">
         <aside class="athena-side panel">
           <img src="atenea.jpg" alt="Atenea" class="athena-smart-img">
-          <p class="eyebrow">Atenea Inteligente · v0.9.5</p>
+          <p class="eyebrow">Atenea Inteligente · v1.0.0</p>
           <h2>Asistente administrativa</h2>
           <p class="athena-description">Analiza alumnos, clases, progreso y finanzas usando la información guardada en Galileo.</p>
           <div id="athenaSnapshot" class="athena-snapshot"></div>
@@ -300,6 +345,38 @@
 <dialog id="profileDialog" class="wide-dialog"><div id="profileContent"></div></dialog>
 <dialog id="academicRecordDialog"><form method="dialog" id="academicRecordForm"><h3 id="recordDialogTitle">Nuevo registro</h3><input type="hidden" name="studentId"><input type="hidden" name="recordType"><label>Título<input name="title" required></label><label>Fecha<input name="date" type="date" required></label><label id="recordValueLabel">Resultado<input name="value"></label><label>Descripción<textarea name="description" rows="4"></textarea></label><div class="dialog-actions"><button value="cancel">Cancelar</button><button class="primary" value="default" id="saveAcademicRecord">Guardar</button></div></form></dialog>
 <script src="admin.js"></script>
+
+
+<dialog id="packageDialog">
+  <form id="packageForm">
+    <div class="dialog-head"><h2>Asignar paquete</h2><button type="button" data-close="packageDialog">×</button></div>
+    <label>Alumno<select name="student" id="packageStudent" required></select></label>
+    <div class="form-grid">
+      <label>Nombre del paquete<input name="name" value="Paquete de 4 clases" required></label>
+      <label>Sesiones totales<input name="total" type="number" min="1" value="4" required></label>
+      <label>Duración por sesión<select name="duration"><option>60 min</option><option>90 min</option></select></label>
+      <label>Fecha de compra<input name="purchaseDate" type="date" required></label>
+      <label>Fecha de vencimiento<input name="expires" type="date"></label>
+      <label>Estado<select name="status"><option>Activo</option><option>Pausado</option><option>Finalizado</option></select></label>
+    </div>
+    <div class="dialog-actions"><button type="button" data-close="packageDialog">Cancelar</button><button class="primary">Guardar paquete</button></div>
+  </form>
+</dialog>
+
+<dialog id="certificateDialog">
+  <form id="certificateForm">
+    <div class="dialog-head"><h2>Crear certificado</h2><button type="button" data-close="certificateDialog">×</button></div>
+    <label>Alumno<select name="student" id="certificateStudent" required></select></label>
+    <div class="form-grid">
+      <label>Tipo<select name="type"><option>Finalización</option><option>Logro académico</option><option>Asistencia</option><option>Progreso destacado</option></select></label>
+      <label>Materia<input name="subject" placeholder="Matemáticas"></label>
+      <label>Fecha<input name="date" type="date" required></label>
+      <label>Título<input name="title" value="Certificado de reconocimiento" required></label>
+    </div>
+    <label>Descripción<textarea name="description" rows="3">Por su esfuerzo, constancia y compromiso con su aprendizaje.</textarea></label>
+    <div class="dialog-actions"><button type="button" data-close="certificateDialog">Cancelar</button><button class="primary">Crear certificado</button></div>
+  </form>
+</dialog>
 
 <dialog id="settingsDialog" class="settings-dialog">
   <form method="dialog" id="settingsForm">
