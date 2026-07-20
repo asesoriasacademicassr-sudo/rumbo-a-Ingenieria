@@ -189,3 +189,7 @@ button:active,.icon-btn:active{transform:scale(.97)}
 .teacher-students span{padding:4px 7px;border-radius:999px;border:1px solid var(--line);font-size:.68rem;color:var(--muted)}
 .teacher-pin{font-family:monospace;letter-spacing:.15em;font-weight:800}
 #teacherStudentsSelect{min-height:125px}
+
+.campus-floating-link{position:fixed;right:18px;bottom:18px;z-index:90;padding:11px 15px;border-radius:999px;background:#2f80ed;color:white;text-decoration:none;font-weight:800;box-shadow:0 10px 28px rgba(0,0,0,.3)}
+
+.live-room-card{padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--panel);display:grid;grid-template-columns:1fr auto;gap:12px;margin-bottom:10px}.live-room-actions{display:flex;gap:7px;flex-wrap:wrap}@media(max-width:700px){.live-room-card{grid-template-columns:1fr}}

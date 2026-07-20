@@ -23,3 +23,5 @@
 .teacher-splash{position:fixed;inset:0;z-index:999;display:grid;place-content:center;text-align:center;background:radial-gradient(circle,rgba(47,128,237,.3),transparent 30%),#061425;transition:.6s}.teacher-splash.hide{opacity:0;visibility:hidden;transform:scale(1.05)}.teacher-splash img{width:130px;margin:auto}.teacher-splash strong{font:800 1.7rem "Exo 2";margin-top:15px}.teacher-splash span{color:var(--gold)}
 #teacherMenu{display:none}.hidden{display:none!important}
 @media(max-width:900px){.teacher-app{grid-template-columns:1fr}.teacher-app>aside{position:fixed;z-index:30;width:250px;transform:translateX(-105%);transition:.3s}.teacher-app>aside.open{transform:none}#teacherMenu{display:block}}
+
+.campus-floating-link{position:fixed;right:18px;bottom:18px;z-index:90;padding:11px 15px;border-radius:999px;background:#2f80ed;color:white;text-decoration:none;font-weight:800;box-shadow:0 10px 28px rgba(0,0,0,.3)}

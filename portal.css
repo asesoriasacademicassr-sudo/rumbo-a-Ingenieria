@@ -10,3 +10,5 @@
 @keyframes logoIn{from{opacity:0;transform:translateY(25px) scale(.6)}to{opacity:1;transform:none}}@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media(max-width:900px){.portal-grid{grid-template-columns:1fr 1fr}.portal-app{grid-template-columns:1fr}.portal-sidebar{position:fixed;z-index:30;transform:translateX(-105%);transition:.3s;width:250px}.portal-sidebar.open{transform:none}#portalMenu{display:block;background:transparent;color:white;border:1px solid var(--line);border-radius:9px;padding:8px}.wide{grid-column:span 2}}
 @media(max-width:600px){.portal-page{padding:16px}.portal-main header{padding:0 15px}.portal-grid{grid-template-columns:1fr}.wide{grid-column:auto}.hero-card{grid-template-columns:1fr}.progress-ring{width:105px;height:105px}.student-chip b{display:none}.list-item{display:block}table{font-size:.82rem}}
+
+.campus-floating-link{position:fixed;right:18px;bottom:18px;z-index:90;padding:11px 15px;border-radius:999px;background:#2f80ed;color:white;text-decoration:none;font-weight:800;box-shadow:0 10px 28px rgba(0,0,0,.3)}

@@ -1,6 +1,6 @@
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const KEY='rai_horizonte_v120',OLD='rai_horizonte_v110';
+const KEY='rai_horizonte_v130',OLD='rai_horizonte_v110';
 let data=JSON.parse(localStorage.getItem(KEY)||'null')||JSON.parse(localStorage.getItem(OLD)||'null'),teacher=null;
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 setTimeout(()=>$('#teacherSplash').classList.add('hide'),1400);setTimeout(()=>$('#teacherSplash').remove(),2100);
