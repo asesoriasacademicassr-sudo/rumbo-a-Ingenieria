@@ -1,152 +1,27 @@
-const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
-const splash=$('#splash');
-const revealPage=()=>{
-  document.body.classList.remove('is-booting');
-  document.body.classList.add('page-ready');
-  splash?.classList.add('hide');
-  $$('.hero .reveal').forEach((el,i)=>setTimeout(()=>el.classList.add('visible'),130+i*170));
-  setTimeout(()=>$('.intro-atenea.reveal')?.classList.add('visible'),620);
-  setTimeout(()=>splash?.remove(),1050);
-};
-/* Duración mínima para que la entrada sí sea perceptible incluso con caché rápida. */
-const bootStarted=performance.now();
-window.addEventListener('load',()=>{
-  const remaining=Math.max(0,1750-(performance.now()-bootStarted));
-  setTimeout(revealPage,remaining);
-});
-/* Respaldo si algún recurso externo tarda demasiado. */
-setTimeout(()=>{if(document.body.classList.contains('is-booting'))revealPage()},4200);
-
-const revealElements=$$('.reveal');
-revealElements.forEach((el,i)=>{
-  el.style.setProperty('--stagger-delay',`${(i%4)*85}ms`);
-});
-const observer='IntersectionObserver' in window?new IntersectionObserver(entries=>entries.forEach(entry=>{
-  if(entry.isIntersecting){
-    entry.target.classList.add('visible');
-    observer.unobserve(entry.target);
-  }
-}),{threshold:.06,rootMargin:'0px 0px -18px'}):null;
-revealElements.forEach(el=>{
-  if(!el.closest('.hero')&&!el.classList.contains('intro-atenea')){
-    if(observer)observer.observe(el);else el.classList.add('visible');
-  }
-});
-
-
-$$('.compact-cta').forEach(link=>link.addEventListener('click',()=>{
- const level=link.dataset.plan;
- const grade=$('#contact-form [name="grado"]');
- if(grade&&!grade.value) grade.placeholder=`Ej. ${level==='Primaria'?'5.º de primaria':'2.º de secundaria'}`;
-}));
-
-$('#theme-toggle').onclick=()=>{document.body.classList.toggle('light');$('#theme-toggle').textContent=document.body.classList.contains('light')?'☾':'☀'};
-
-const topBtn=$('#back-to-top');
-addEventListener('scroll',()=>topBtn.classList.toggle('show',scrollY>500));
-topBtn.onclick=()=>scrollTo({top:0,behavior:'smooth'});
-
-const canvas=$('#stars'),ctx=canvas.getContext('2d');let stars=[];
-function resize(){canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio;stars=Array.from({length:Math.min(innerWidth<700?30:65,Math.floor(innerWidth/14))},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:(Math.random()*1.15+.2)*devicePixelRatio,a:Math.random()*.45+.12,s:(Math.random()*.015+.004)*devicePixelRatio}))}
-function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);stars.forEach(s=>{s.y+=s.s;if(s.y>canvas.height)s.y=0;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${s.a})`;ctx.fill()});requestAnimationFrame(draw)}
-if(innerWidth>=700){addEventListener('resize',resize);resize();draw()}else{canvas.style.display='none'}
-
-const state=JSON.parse(localStorage.getItem('rai-v08-state')||'{}');
-state.name=state.name||'Explorador en formación';
-state.missions=state.missions||{};
-function save(){localStorage.setItem('rai-v08-state',JSON.stringify(state))}
-function updateDashboard(){
-  const done=Object.values(state.missions).filter(Boolean).length;
-  const progress=Math.min(100,35+done*20);
-  $('#overall-progress').textContent=progress+'%';
-  $('.metric-card .mini-progress i').style.width=progress+'%';
-  $('#badge-count').textContent=(2+done)+' / 6';
-  $('.profile-card h3').textContent=state.name;
-}
-$('#edit-profile').onclick=()=>{const n=prompt('Escribe el nombre o apodo que deseas mostrar:',state.name);if(n&&n.trim()){state.name=n.trim();save();updateDashboard()}};
-$$('.mission-button').forEach(btn=>btn.onclick=()=>{
-  const card=btn.closest('.mission-card'),key=card.dataset.mission;
-  state.missions[key]=!state.missions[key];save();
-  card.classList.toggle('completed',state.missions[key]);
-  btn.textContent=state.missions[key]?'Práctica completada ✓':'Marcar práctica completada';
-  const bar=card.querySelector('.mini-progress i'),small=card.querySelector('small');
-  bar.style.width=state.missions[key]?'100%':(key==='algebra'?'60%':key==='fisica'?'30%':'45%');
-  small.textContent=state.missions[key]?'100% completado':(key==='algebra'?'60% completado':key==='fisica'?'30% completado':'45% completado');
-  const badgeIndex={algebra:2,fisica:3,ingles:4}[key];
-  $$('.badge')[badgeIndex].classList.toggle('unlocked',state.missions[key]);
-  updateDashboard();
-});
-Object.entries(state.missions).forEach(([key,val])=>{if(val){const card=$(`.mission-card[data-mission="${key}"]`);if(card){card.classList.add('completed');card.querySelector('.mission-button').textContent='Práctica completada ✓';card.querySelector('.mini-progress i').style.width='100%';card.querySelector('small').textContent='100% completado';const bi={algebra:2,fisica:3,ingles:4}[key];$$('.badge')[bi].classList.add('unlocked')}}});
-updateDashboard();
-
-const questions=[
-{subject:'Matemáticas',text:'¿Cuál es el resultado de 18 + 27?',options:['35','45','55','65'],answer:1},
-{subject:'Matemáticas',text:'¿Qué fracción equivale a 0.5?',options:['1/4','1/2','2/3','3/4'],answer:1},
-{subject:'Matemáticas',text:'Si 3x = 21, ¿cuánto vale x?',options:['6','7','8','9'],answer:1},
-{subject:'Matemáticas',text:'¿Cuál es el área de un rectángulo de 5 × 4?',options:['9','18','20','25'],answer:2},
-{subject:'Física',text:'¿Qué magnitud mide qué tan rápido cambia la posición?',options:['Masa','Velocidad','Temperatura','Energía'],answer:1},
-{subject:'Física',text:'¿Qué fuerza atrae los objetos hacia la Tierra?',options:['Magnética','Elástica','Gravedad','Fricción'],answer:2},
-{subject:'Física',text:'La unidad de fuerza en el SI es:',options:['Joule','Watt','Newton','Pascal'],answer:2},
-{subject:'Inglés',text:'Choose the correct option: She ___ a student.',options:['am','is','are','be'],answer:1},
-{subject:'Inglés',text:'What is the opposite of “difficult”?',options:['Easy','Strong','Long','Fast'],answer:0},
-{subject:'Inglés',text:'Choose the correct translation: “Yo estudio todos los días”.',options:['I studied every day','I study every day','I am study every day','I studies every day'],answer:1}
-];
-const testTips=['Lee con calma antes de elegir.','¡Buen comienzo! Sigue así.','No te preocupes si dudas.','Ya llevas casi la mitad.','Ahora pasamos a Física.','Relaciona la pregunta con situaciones reales.','¡Excelente! Falta poco.','Comenzamos Inglés.','Confía en lo que sabes.','Última pregunta. ¡Tú puedes!'];
-let qi=0,answers=Array(questions.length).fill(null);
-const stage=$('#question-stage'),next=$('#next-question'),prev=$('#prev-question');
-function renderQuestion(){
-  const q=questions[qi];
-  stage.innerHTML=`<p class="eyebrow">${q.subject}</p><h3 class="question-title">${q.text}</h3><div class="options">${q.options.map((o,i)=>`<label class="option"><input type="radio" name="q" value="${i}" ${answers[qi]===i?'checked':''}><span>${String.fromCharCode(65+i)}) ${o}</span></label>`).join('')}</div>`;
-  $('#question-counter').textContent=`Pregunta ${qi+1} de ${questions.length}`;
-  $('#athena-test-tip').textContent=testTips[qi];
-  const p=Math.round((qi+1)/questions.length*100);
-  $('#progress-bar').style.width=p+'%';
-  $('#progress-ring').style.background=`radial-gradient(circle,var(--navy2) 58%,transparent 59%),conic-gradient(var(--blue) ${p}%,rgba(148,163,184,.14) 0)`;
-  $('#progress-ring strong').textContent=p+'%';
-  prev.disabled=qi===0;next.textContent=qi===questions.length-1?'Ver resultados':'Siguiente';
-}
-stage.addEventListener('change',e=>{if(e.target.name==='q')answers[qi]=+e.target.value});
-prev.onclick=()=>{if(qi>0){qi--;renderQuestion()}};
-next.onclick=()=>{if(answers[qi]===null){alert('Selecciona una respuesta para continuar.');return}if(qi<questions.length-1){qi++;renderQuestion()}else showReport()};
-function showReport(){
-  const scores={Matemáticas:[0,0],Física:[0,0],Inglés:[0,0]};
-  questions.forEach((q,i)=>{scores[q.subject][1]++;if(answers[i]===q.answer)scores[q.subject][0]++});
-  const values=Object.entries(scores).map(([name,[ok,total]])=>({name,p:Math.round(ok/total*100)}));
-  const strongest=[...values].sort((a,b)=>b.p-a.p)[0],weakest=[...values].sort((a,b)=>a.p-b.p)[0];
-  const overall=Math.round(values.reduce((s,v)=>s+v.p,0)/values.length);
-  const level=overall>=80?'Avanzado':overall>=60?'Intermedio':'Fundamentos';
-  $('#diagnostic-form').hidden=true;$('.diagnostic-side').hidden=true;
-  const r=$('#diagnostic-report');r.hidden=false;
-  r.innerHTML=`<p class="eyebrow">Reporte de orientación</p><h3>Resultado general: ${overall}%</h3><div class="score-grid">${values.map(v=>`<div><span>${v.name}</span><strong>${v.p}%</strong></div>`).join('')}</div><p><b>Nivel sugerido:</b> ${level}</p><p><b>Mayor fortaleza:</b> ${strongest.name}</p><p><b>Área recomendada para reforzar:</b> ${weakest.name}</p><p><b>Recomendación de Atenea:</b> Empieza con una clase ${overall<65?'Profunda':'Estándar'} y realiza la EIA para crear una ruta personalizada.</p><button class="button secondary" id="restart-test">Repetir orientación</button>`;
-  $$('.badge')[5].classList.add('unlocked');
-  $('#restart-test').onclick=()=>{qi=0;answers.fill(null);r.hidden=true;$('#diagnostic-form').hidden=false;$('.diagnostic-side').hidden=false;renderQuestion()};
-}
-renderQuestion();
-
-const filters=$$('.filter'),cards=$$('.resource-card');
-filters.forEach(b=>b.onclick=()=>{filters.forEach(x=>x.classList.remove('active'));b.classList.add('active');const f=b.dataset.filter;cards.forEach(c=>c.hidden=f!=='all'&&c.dataset.category!==f)});
-$('#resource-search').oninput=e=>{const t=e.target.value.toLowerCase();cards.forEach(c=>c.hidden=!c.textContent.toLowerCase().includes(t))};
-
-$('#contact-form').addEventListener('submit',e=>{
-  e.preventDefault();const d=new FormData(e.target);
-  const text=['Hola, quiero solicitar información para una asesoría.','','━━━━━━━━━━━━━━━━━━━━','🚀 RUMBO A INGENIERÍA','SOLICITUD DE INFORMACIÓN','━━━━━━━━━━━━━━━━━━━━','','👤 DATOS DEL ESTUDIANTE',`Nombre: ${d.get('nombre')}`,`Grado escolar: ${d.get('grado')}`,'','📚 ASESORÍA SOLICITADA',`Materia: ${d.get('materia')}`,`Modalidad: ${d.get('modalidad')||'Solicito recomendación'}`,`Horario preferido: ${d.get('horario')||'Por definir'}`,'','🎯 OBJETIVO PRINCIPAL',d.get('mensaje')||'Sin información adicional','','Gracias. Quedo atento(a) a su respuesta.'].join('\n');
-  open(`https://wa.me/528713251593?text=${encodeURIComponent(text)}`,'_blank','noopener');
-});
-
-const athena=$('#athena');
-function openAthena(){athena.classList.add('open')}
-$('#athena-toggle').onclick=openAthena;$('#open-athena').onclick=openAthena;$('#athena-close').onclick=()=>athena.classList.remove('open');
-function answer(q){
-  q=q.toLowerCase();
-  if(q.includes('materia'))return'Ofrecemos Matemáticas, Física e Inglés para estudiantes de primaria y secundaria.';
-  if(q.includes('precio')||q.includes('cuestan'))return'Primaria: $80 la clase Estándar y $100 la Profunda. Secundaria: $120 y $150. La primera clase es gratis.';
-  if(q.includes('modalidad'))return'La clase Estándar dura 1 hora. La Profunda dura 1 hora y 30 minutos. Podemos recomendarte la mejor según tus necesidades.';
-  if(q.includes('agendo')||q.includes('agendar'))return'Completa el formulario de contacto o escribe al 871 325 1593.';
-  if(q.includes('horario'))return'Atendemos de lunes a sábado de 5:00 a 9:00 pm y domingo de 2:00 a 8:00 pm.';
-  if(q.includes('orientación')||q.includes('orientacion'))return'La orientación inicial tiene 10 preguntas y genera un reporte de Matemáticas, Física e Inglés.';
-  if(q.includes('recurso')||q.includes('biblioteca'))return'La Biblioteca 2.0 organiza recursos por materia y técnicas de estudio. Algunos materiales se publicarán próximamente.';
-  return'Puedo ayudarte con materias, precios, horarios, modalidades, orientación y recursos.';
-}
-function addMsg(text,cls){const p=document.createElement('p');p.className=cls;p.textContent=text;$('#athena-messages').append(p);$('#athena-messages').scrollTop=9999}
-$$('.quick-questions button').forEach(b=>b.onclick=()=>{addMsg(b.textContent,'user');setTimeout(()=>addMsg(answer(b.textContent),'bot'),250)});
-$('#athena-form').onsubmit=e=>{e.preventDefault();const i=$('#athena-input'),q=i.value.trim();if(!q)return;addMsg(q,'user');i.value='';setTimeout(()=>addMsg(answer(q),'bot'),250)};
+import {CONFIG} from './config.js';import {Store} from './store.js';import {Auth} from './auth.js';
+const app=document.querySelector('#app'),esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));let db=Store.load();
+const toast=t=>{const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.append(e);setTimeout(()=>e.remove(),2500)};
+function login(){app.innerHTML=`<main class="login"><section class="login-hero"><img src="assets/logo-oficial.png"><h1>Rumbo a Ingeniería 2.0</h1><p class="muted">Núcleo Nube: una sola plataforma para alumnos, familias, docentes y administración.</p></section><section class="login-card"><small style="color:var(--gold)">v${CONFIG.version} · ${CONFIG.mode==='demo'?'Modo demostración':'Nube conectada'}</small><h2>Iniciar sesión</h2><form id="loginForm"><label class="field">Perfil<select name="role"><option value="admin">Administrador</option><option value="teacher">Profesor</option><option value="student">Alumno</option><option value="parent">Padre o tutor</option></select></label><label class="field">Correo (opcional en demo)<input name="email" type="email" placeholder="correo@ejemplo.com"></label><label class="field">PIN de demostración<input name="pin" inputmode="numeric" required placeholder="2607"></label><button class="btn" style="width:100%">Entrar</button></form><p class="muted"><b>Accesos:</b> administrador 2607, profesor 5832, alumno 1001, familia 7001.</p></section></main>`;document.querySelector('#loginForm').onsubmit=async e=>{e.preventDefault();try{await Auth.signIn(Object.fromEntries(new FormData(e.target)));render()}catch(err){toast(err.message)}}}
+const pagesByRole={admin:['dashboard','people','courses','classes','assignments','library','messages','payments','athena','settings'],teacher:['dashboard','courses','classes','assignments','library','messages','athena'],student:['dashboard','courses','classes','assignments','library','messages','athena'],parent:['dashboard','progress','classes','assignments','messages','payments']};
+const labels={dashboard:'🏠 Resumen',people:'👥 Personas',courses:'📚 Cursos',classes:'🎥 Clases',assignments:'📝 Tareas',library:'🗂️ Biblioteca',messages:'💬 Mensajes',payments:'💳 Pagos',athena:'🤖 Atenea',settings:'⚙️ Configuración',progress:'📊 Progreso'};
+function render(){db=Store.load();const s=Auth.current();if(!s)return login();const pages=pagesByRole[s.role];app.innerHTML=`<div class="shell"><aside class="sidebar"><div class="brand"><img src="assets/favicon.png"><div><b>Rumbo a Ingeniería</b><small>Núcleo Nube 2.0</small></div></div><nav class="nav">${pages.map((p,i)=>`<button data-page="${p}" class="${i?'':'active'}">${labels[p]}</button>`).join('')}</nav></aside><main class="main"><header class="topbar"><button class="btn secondary mobile" id="menu">☰</button><div><b id="pageTitle">${labels[pages[0]]}</b><small class="muted" style="display:block">${esc(s.name)} · ${s.role}</small></div><button class="btn secondary" id="logout">Salir</button></header><div class="content">${pages.map((p,i)=>`<section id="${p}" class="page ${i?'':'active'}"></section>`).join('')}</div></main></div><dialog id="modal" class="modal"></dialog>`;
+ document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===b.dataset.page));document.querySelector('#pageTitle').textContent=labels[b.dataset.page];document.querySelector('.sidebar').classList.remove('open')});document.querySelector('#logout').onclick=()=>{Auth.signOut();login()};document.querySelector('#menu').onclick=()=>document.querySelector('.sidebar').classList.toggle('open');renderPages(s)}
+function metric(label,value){return `<article class="card metric"><span class="muted">${label}</span><b>${value}</b></article>`}
+function user(s){return db.profiles.find(p=>p.id===s.id)}
+function relatedStudents(s){if(s.role==='student')return [s.id];if(s.role==='parent')return db.links.filter(l=>l.parentId===s.id).map(l=>l.studentId);return db.profiles.filter(p=>p.role==='student').map(p=>p.id)}
+function renderPages(s){const ids=relatedStudents(s),u=user(s);const courses=db.courses.filter(c=>s.role==='admin'||(s.role==='teacher'?c.teacherId===s.id:c.studentIds.some(id=>ids.includes(id))));
+ if(document.querySelector('#dashboard'))document.querySelector('#dashboard').innerHTML=`<h1>Bienvenido, ${esc(s.name.split(' ')[0])}</h1><p class="muted">Información conectada para tu perfil.</p><div class="grid">${metric('Cursos',courses.length)}${metric('Clases',db.classes.filter(c=>courses.some(x=>x.id===c.courseId)).length)}${metric('Tareas',db.assignments.filter(a=>courses.some(c=>c.id===a.courseId)).length)}${metric('Mensajes',db.messages.filter(m=>m.toId===s.id).length)}<article class="card wide"><h3>Próximas clases</h3><div class="list">${db.classes.filter(c=>courses.some(x=>x.id===c.courseId)).map(c=>`<div class="item"><span><b>${esc(db.courses.find(x=>x.id===c.courseId)?.title)}</b><small>${c.date} · ${c.time} · ${c.duration} min</small></span><span class="badge">${c.status}</span></div>`).join('')||'<p class="muted">Sin clases.</p>'}</div></article><article class="card side"><h3>Estado del sistema</h3><p>✅ Sesión por roles</p><p>✅ Datos compartidos</p><p>✅ Preparado para nube</p><p class="muted">Modo actual: ${CONFIG.mode}</p></article></div>`;
+ renderPeople(s);renderCourses(s,courses);renderClasses(s,courses);renderAssignments(s,courses,ids);renderLibrary(s);renderMessages(s);renderPayments(s,ids);renderAthena(s,u);renderSettings(s);renderProgress(s,ids)}
+function renderPeople(s){const el=document.querySelector('#people');if(!el)return;el.innerHTML=`<div class="actions"><h1 style="flex:1">Personas</h1><button class="btn" id="addPerson">+ Nuevo usuario</button></div><div class="card"><table class="table"><thead><tr><th>Nombre</th><th>Perfil</th><th>Correo</th><th>Estado</th></tr></thead><tbody>${db.profiles.map(p=>`<tr><td>${esc(p.name)}</td><td>${p.role}</td><td>${esc(p.email)}</td><td>${p.status}</td></tr>`).join('')}</tbody></table></div>`;document.querySelector('#addPerson').onclick=()=>formModal('Nuevo usuario',`<label class="field">Nombre<input name="name" required></label><label class="field">Perfil<select name="role"><option value="student">Alumno</option><option value="teacher">Profesor</option><option value="parent">Padre</option></select></label><label class="field">Correo<input name="email" type="email" required></label><label class="field">PIN<input name="pin" required></label>`,fd=>{db.profiles.push({id:Store.uid(fd.role),...fd,status:'active',progress:0});Store.save(db);render();toast('Usuario creado')})}
+function renderCourses(s,courses){const el=document.querySelector('#courses');if(!el)return;el.innerHTML=`<h1>Cursos</h1><div class="grid">${courses.map(c=>`<article class="card side"><span class="badge">${c.subject}</span><h3>${esc(c.title)}</h3><p class="muted">${c.studentIds.length} alumno(s)</p></article>`).join('')||'<p>Sin cursos.</p>'}</div>`}
+function renderClasses(s,courses){const el=document.querySelector('#classes');if(!el)return;const list=db.classes.filter(c=>courses.some(x=>x.id===c.courseId));el.innerHTML=`<div class="actions"><h1 style="flex:1">Clases</h1>${['admin','teacher'].includes(s.role)?'<button class="btn" id="addClass">+ Programar</button>':''}</div><div class="card list">${list.map(c=>`<div class="item"><span><b>${esc(db.courses.find(x=>x.id===c.courseId)?.title)}</b><small>${c.date} · ${c.time} · ${c.duration} min</small></span><div class="actions"><span class="badge">${c.status}</span>${c.meetingUrl?`<a class="btn" target="_blank" href="${esc(c.meetingUrl)}">Entrar</a>`:''}</div></div>`).join('')||'<p class="muted">Sin clases.</p>'}</div>`;document.querySelector('#addClass')?.addEventListener('click',()=>formModal('Programar clase',`<label class="field">Curso<select name="courseId">${courses.map(c=>`<option value="${c.id}">${esc(c.title)}</option>`).join('')}</select></label><label class="field">Fecha<input name="date" type="date" required></label><label class="field">Hora<input name="time" type="time" required></label><label class="field">Duración<input name="duration" type="number" value="60"></label><label class="field">Enlace<input name="meetingUrl" type="url"></label>`,fd=>{const c=db.courses.find(x=>x.id===fd.courseId);db.classes.push({id:Store.uid('class'),...fd,duration:Number(fd.duration),teacherId:c.teacherId,studentIds:c.studentIds,status:'scheduled'});Store.save(db);render()}))}
+function renderAssignments(s,courses,ids){const el=document.querySelector('#assignments');if(!el)return;const list=db.assignments.filter(a=>courses.some(c=>c.id===a.courseId));el.innerHTML=`<h1>Tareas</h1><div class="card list">${list.map(a=>{const sub=db.submissions.find(x=>x.assignmentId===a.id&&ids.includes(x.studentId));return `<div class="item"><span><b>${esc(a.title)}</b><small>${esc(a.instructions)} · vence ${a.dueDate}</small></span><span class="badge">${sub?sub.status:'Pendiente'}</span></div>`}).join('')||'<p class="muted">Sin tareas.</p>'}</div>`}
+function renderLibrary(s){const el=document.querySelector('#library');if(!el)return;el.innerHTML=`<h1>Biblioteca</h1><div class="grid">${db.resources.map(r=>`<article class="card side"><span class="badge">${r.type}</span><h3>${esc(r.title)}</h3><p>${esc(r.description)}</p><small class="muted">${r.subject} · ${r.level}</small></article>`).join('')}</div>`}
+function renderMessages(s){const el=document.querySelector('#messages');if(!el)return;const msgs=db.messages.filter(m=>m.fromId===s.id||m.toId===s.id);el.innerHTML=`<h1>Mensajes</h1><div class="card list">${msgs.map(m=>`<div class="item"><span><b>${m.fromId===s.id?'Enviado':'Recibido'}</b><small>${esc(m.text)}</small></span></div>`).join('')||'<p class="muted">No hay mensajes.</p>'}</div>`}
+function renderPayments(s,ids){const el=document.querySelector('#payments');if(!el)return;const list=db.payments.filter(p=>s.role==='admin'||ids.includes(p.studentId));el.innerHTML=`<h1>Pagos</h1><div class="card list">${list.map(p=>`<div class="item"><span><b>${esc(p.concept)}</b><small>${p.date}</small></span><span>$${p.amount} · ${p.status}</span></div>`).join('')||'<p class="muted">Sin pagos.</p>'}</div>`}
+function renderAthena(s,u){const el=document.querySelector('#athena');if(!el)return;el.innerHTML=`<h1>Atenea</h1><div class="card athena"><div class="chat" id="chat"><div class="bubble">Hola, ${esc(s.name.split(' ')[0])}. Soy Atenea. Escribe un tema o ejercicio.</div></div><form class="chat-form" id="athenaForm"><input name="q" required placeholder="Ejemplo: explícame las ecuaciones lineales"><button class="btn">Enviar</button></form></div>`;document.querySelector('#athenaForm').onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');const chat=document.querySelector('#chat');chat.insertAdjacentHTML('beforeend',`<div class="bubble me">${esc(q)}</div><div class="bubble">${esc(athenaAnswer(q))}</div>`);e.target.reset();chat.scrollTop=chat.scrollHeight}}
+function athenaAnswer(q){q=q.toLowerCase();if(q.includes('ecuaci'))return 'Primero simplifica ambos lados, reúne las incógnitas, mueve constantes, divide por el coeficiente y verifica sustituyendo.';if(q.includes('newton')||q.includes('fuerza'))return 'Identifica las fuerzas, calcula la fuerza neta y aplica F = m·a. Escribe datos, fórmula, sustitución, resultado y unidades.';if(q.includes('inglés'))return 'Practica cinco oraciones, léelas en voz alta y cambia sujeto, tiempo y complemento.';return 'Indica materia, tema y la parte que te causa dificultad. Te guiaré paso a paso.'}
+function renderSettings(s){const el=document.querySelector('#settings');if(!el)return;el.innerHTML=`<h1>Configuración</h1><div class="grid"><article class="card wide"><h3>Conexión a la nube</h3><p class="muted">Edita <code>app/config.js</code> con tu URL y clave pública de Supabase y cambia <code>mode</code> a <code>cloud</code>.</p><p>La base SQL y las políticas de seguridad están en <code>supabase/schema.sql</code>.</p></article><article class="card side"><h3>Respaldo</h3><button class="btn secondary" id="backup">Descargar JSON</button></article></div>`;document.querySelector('#backup').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='rumbo-a-ingenieria-respaldo.json';a.click()}}
+function renderProgress(s,ids){const el=document.querySelector('#progress');if(!el)return;el.innerHTML=`<h1>Progreso</h1><div class="grid">${ids.map(id=>{const x=db.profiles.find(p=>p.id===id);return `<article class="card side"><h3>${esc(x?.name)}</h3><b style="font-size:2rem">${x?.progress||0}%</b><p class="muted">Progreso general</p></article>`}).join('')}</div>`}
+function formModal(title,fields,onSubmit){const m=document.querySelector('#modal');m.innerHTML=`<form><h2>${title}</h2>${fields}<div class="actions"><button type="button" class="btn secondary" id="cancel">Cancelar</button><button class="btn">Guardar</button></div></form>`;m.showModal();m.querySelector('#cancel').onclick=()=>m.close();m.querySelector('form').onsubmit=e=>{e.preventDefault();onSubmit(Object.fromEntries(new FormData(e.target)));m.close()}}
+window.addEventListener('rai:update',()=>{db=Store.load()});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});render();
